@@ -71,7 +71,6 @@ function SignInForm({ locale }: { locale: string }) {
       return;
     }
 
-    // Upsert user record for cross-app sync
     if (data.user) {
       await supabase
         .from("users")
