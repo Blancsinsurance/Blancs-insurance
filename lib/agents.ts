@@ -7,8 +7,7 @@ export type Agent = {
   photoUrl?: string;
 };
 
-// Mirrors the `agents` table in Supabase. Seed this table directly in
-// production; this file is a typed fallback/reference used for local dev.
+// Mirrors the `agents` table in Supabase.
 export const AGENTS: Agent[] = [
   {
     id: "jimmy-saint-hillaire",
@@ -51,7 +50,12 @@ export const OFFICE = {
   phone: "(239) 300-3830",
   email: "Agency@blancsins.com",
   hours: [
-    { day: "Monday", value: "9:00 AM – 5:00 PM" },
-    { day: "Tuesday", value: "9:00 AM – 5:00 PM" },
-    { day: "Wednesday", value: "9:00 AM – 5:00 PM" },
-    { day: "Thursday", value: "9:
+    { day: "Monday", value: "9:00 AM - 5:00 PM" },
+    { day: "Tuesday", value: "9:00 AM - 5:00 PM" },
+    { day: "Wednesday", value: "9:00 AM - 5:00 PM" },
+    { day: "Thursday", value: "9:00 AM - 5:00 PM" },
+    { day: "Friday", value: "9:00 AM - 5:00 PM" },
+    { day: "Saturday", value: "9:00 AM - 5:00 PM" },
+    { day: "Sunday", value: "Closed" },
+  ],
+};
