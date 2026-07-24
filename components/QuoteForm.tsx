@@ -30,10 +30,9 @@ export default function QuoteForm({ preselectedAgentId }: { preselectedAgentId?:
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
   async function onSubmit(values: FormValues) {
-    // Insert directly into Supabase; an Edge Function trigger (see
-    // docs/schema.sql) emails/pushes the assigned or preselected agent.
-    // No pricing logic runs here — a human always replies.
-    const { error } = await supabase.from("quote_requests").insert({
+    // Insert directly into Supabase so every request is recorded, even if
+    // the notification email below fails for some reason.
+    const record = {
       first_name: values.firstName,
       last_name: values.lastName,
       policy_type: values.policyType,
@@ -42,15 +41,35 @@ export default function QuoteForm({ preselectedAgentId }: { preselectedAgentId?:
       description: values.description ?? "",
       agent_id: preselectedAgentId ?? null,
       status: "new",
-    });
+    };
 
-    if (!error) {
-      setSubmitted(true);
-    } else {
+    const { error } = await supabase.from("quote_requests").insert(record);
+
+    if (error) {
       setSubmitError(
         "Something went wrong sending your request. Please call our office directly, or try again."
       );
+      return;
     }
+
+    // Notify the agent by email. We call the Edge Function directly instead
+    // of relying on a Database Webhook trigger, so this doesn't depend on
+    // Supabase's webhook feature being provisioned on this project.
+    try {
+      const { error: fnError } = await supabase.functions.invoke(
+        "smart-processor",
+        { body: { record } }
+      );
+      if (fnError) {
+        console.error("smart-processor invoke failed:", fnError);
+      }
+    } catch (fnError) {
+      console.error("smart-processor invoke threw:", fnError);
+    }
+
+    // The quote request was saved successfully regardless of whether the
+    // notification email went out, so we still show the success state.
+    setSubmitted(true);
   }
 
   if (submitted) {
