@@ -7,6 +7,21 @@ import { supabase } from "@/lib/supabase";
 
 type Step = "phone" | "otp";
 
+// Supabase phone auth requires E.164 (+1XXXXXXXXXX). Most users will just
+// type digits (or a formatted US number), so assume US/+1 unless they've
+// already typed a leading +.
+function toE164(raw: string): string {
+  const trimmed = raw.trim();
+  if (trimmed.startsWith("+")) {
+    return "+" + trimmed.slice(1).replace(/\D/g, "");
+  }
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.length === 11 && digits.startsWith("1")) {
+    return "+" + digits;
+  }
+  return "+1" + digits;
+}
+
 export default function SignInPage({
   params: { locale },
 }: {
@@ -35,10 +50,10 @@ function SignInForm({ locale }: { locale: string }) {
     setSending(true);
     setError(null);
 
-    console.log("🔄 Attempting OTP to:", phone);
+    console.log("🔄 Attempting OTP to:", toE164(phone));
 
     const { error: supabaseError } = await supabase.auth.signInWithOtp({
-      phone,
+      phone: toE164(phone),
     });
 
     setSending(false);
@@ -58,7 +73,7 @@ function SignInForm({ locale }: { locale: string }) {
     setError(null);
 
     const { error: verifyError, data } = await supabase.auth.verifyOtp({
-      phone,
+      phone: toE164(phone),
       token: otp,
       type: "sms",
     });
@@ -76,7 +91,7 @@ function SignInForm({ locale }: { locale: string }) {
         .from("users")
         .upsert({ 
           id: data.user.id, 
-          phone, 
+          phone: toE164(phone), 
           preferred_language: locale 
         });
     }
@@ -103,7 +118,7 @@ function SignInForm({ locale }: { locale: string }) {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1 (239) 555-0100"
+                placeholder="(239) 555-0100"
                 className="rounded-xl border border-ice-100 px-4 py-3 text-base"
                 autoFocus
               />
@@ -113,7 +128,7 @@ function SignInForm({ locale }: { locale: string }) {
 
             <button
               onClick={sendOtp}
-              disabled={sending || phone.length < 10}
+              disabled={sending || phone.replace(/\D/g, "").length < 10}
               className="mt-6 w-full rounded-full bg-blancs-blue px-6 py-3.5 text-base font-semibold text-white shadow-soft hover:bg-ocean-700 transition-colors disabled:opacity-60"
             >
               {sending ? t("sendingCode") : t("sendCode")}
@@ -125,7 +140,7 @@ function SignInForm({ locale }: { locale: string }) {
           <>
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-ocean-900">
-                {t("otpLabelPrefix")} {phone}
+                {t("otpLabelPrefix")} {toE164(phone)}
               </span>
               <input
                 type="text"
