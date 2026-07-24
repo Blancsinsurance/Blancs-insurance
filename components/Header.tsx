@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
 import HeaderAuthLink from "./HeaderAuthLink";
-import { OFFICE } from "@/lib/agents";
 
 export default function Header({ locale }: { locale: string }) {
   const t = useTranslations("nav");
@@ -35,12 +34,12 @@ export default function Header({ locale }: { locale: string }) {
         <div className="flex items-center gap-3 sm:gap-4">
           <LanguageSwitcher locale={locale} />
           <HeaderAuthLink locale={locale} />
-          <a
-            href={`tel:${OFFICE.phone.replace(/[^0-9+]/g, "")}`}
+          <Link
+            href={`/${locale}/contact`}
             className="hidden sm:inline-flex items-center rounded-full bg-blancs-blue px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:bg-ocean-700 transition-colors"
           >
             {t("cta")}
-          </a>
+          </Link>
         </div>
       </div>
     </header>
