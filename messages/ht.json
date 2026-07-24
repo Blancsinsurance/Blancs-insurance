@@ -2,6 +2,7 @@
   "nav": {
     "home": "Akèy",
     "services": "Sèvis",
+    "requestService": "Mande Sèvis",
     "agents": "Ajan Nou Yo",
     "contact": "Kontakte Nou",
     "cta": "Mande yon Devi",
@@ -86,6 +87,20 @@
       "flood": "Inondasyon",
       "boat": "Bato"
     }
+  },
+  "requestService": {
+    "title": "Kisa nou ka ede w ak jodi a?",
+    "subtitle": "Chwazi yon sèvis epi n ap konekte w ak ajan ki dwat la imedyatman.",
+    "options": {
+      "policyNumber": "Jwenn Nimewo Polis",
+      "makePayment": "Fè yon Peman",
+      "addVehicle": "Ajoute Veyikil",
+      "addDriver": "Ajoute Chofè",
+      "adjustCoverage": "Ajiste Kouvèti yo",
+      "appAssistance": "Asistans ak App la",
+      "discounts": "Mande sou Rabè"
+    },
+    "startChat": "Kòmanse Chat ak Ajan"
   },
   "footer": {
     "officeLine": "Liy Biwo",

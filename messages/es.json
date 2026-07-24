@@ -2,6 +2,7 @@
   "nav": {
     "home": "Inicio",
     "services": "Servicios",
+    "requestService": "Solicitar Servicio",
     "agents": "Nuestros Agentes",
     "contact": "Contacto",
     "cta": "Solicitar Cotización",
@@ -86,6 +87,20 @@
       "flood": "Inundación",
       "boat": "Embarcación"
     }
+  },
+  "requestService": {
+    "title": "¿En qué podemos ayudarte hoy?",
+    "subtitle": "Selecciona un servicio y te conectaremos con el agente adecuado de inmediato.",
+    "options": {
+      "policyNumber": "Obtener Número de Póliza",
+      "makePayment": "Hacer un Pago",
+      "addVehicle": "Agregar Vehículo",
+      "addDriver": "Agregar Conductor",
+      "adjustCoverage": "Ajustar Coberturas",
+      "appAssistance": "Asistencia con la App",
+      "discounts": "Preguntar por Descuentos"
+    },
+    "startChat": "Iniciar Chat con Agente"
   },
   "footer": {
     "officeLine": "Línea de la Oficina",

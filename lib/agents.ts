@@ -11,6 +11,13 @@ export type Agent = {
 // production; this file is a typed fallback/reference used for local dev.
 export const AGENTS: Agent[] = [
   {
+    id: "jimmy-saint-hillaire",
+    name: "Jimmy Saint Hillaire",
+    phone: "(239) 235-1022",
+    email: "Agency@blancsins.com",
+    languages: ["English", "Kreyòl"],
+  },
+  {
     id: "odessa-skinner",
     name: "Odessa Skinner",
     phone: "(239) 878-8577",
@@ -38,13 +45,6 @@ export const AGENTS: Agent[] = [
     email: "Delwin@blancsins.com",
     languages: ["English", "Kreyòl"],
   },
-  {
-    id: "jimmy-saint-hillaire",
-    name: "Jimmy Saint Hillaire",
-    phone: "(239) 235-1022",
-    email: "Agency@blancsins.com",
-    languages: ["English", "Kreyòl"],
-  },
 ];
 
 export const OFFICE = {
@@ -54,9 +54,4 @@ export const OFFICE = {
     { day: "Monday", value: "9:00 AM – 5:00 PM" },
     { day: "Tuesday", value: "9:00 AM – 5:00 PM" },
     { day: "Wednesday", value: "9:00 AM – 5:00 PM" },
-    { day: "Thursday", value: "9:00 AM – 5:00 PM" },
-    { day: "Friday", value: "9:00 AM – 5:00 PM" },
-    { day: "Saturday", value: "9:00 AM – 5:00 PM" },
-    { day: "Sunday", value: "Closed" },
-  ],
-};
+    { day: "Thursday", value: "9:
