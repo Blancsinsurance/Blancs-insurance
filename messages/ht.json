@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "home": "Akèy",
+    "services": "Sèvis",
+    "agents": "Ajan Nou Yo",
+    "contact": "Kontakte Nou",
+    "cta": "Mande yon Devi",
+    "signIn": "Konekte",
+    "messagesLink": "Mesaj"
+  },
+  "auth": {
+    "title": "Konekte",
+    "subtitle": "Itilize menm nimewo telefòn ou itilize nan app Blancs Insurance a pou wè konvèsasyon w yo nan tou de kote.",
+    "phoneLabel": "Nimewo telefòn",
+    "sendCode": "Voye Kòd",
+    "sendingCode": "Ap voye kòd…",
+    "otpLabelPrefix": "Antre kòd 6 chif ki voye bay",
+    "verify": "Verifye epi Kontinye",
+    "verifying": "Ap verifye…"
+  },
+  "conversations": {
+    "title": "Mesaj",
+    "subtitle": "Konvèsasyon isit la rete senkronize avèk app Blancs Insurance a.",
+    "loading": "Ap chaje konvèsasyon w yo…",
+    "emptyTitle": "Pa gen konvèsasyon toujou",
+    "emptyBody": "Kòmanse youn nan",
+    "emptyLink": "paj Ajan yo",
+    "active": "Konvèsasyon aktif",
+    "closed": "Fèmen"
+  },
+  "chat": {
+    "placeholder": "Ekri yon mesaj",
+    "attachment": "Gade fichye atache"
+  },
+  "hero": {
+    "eyebrow": "Otorize. Lokal. Imen.",
+    "title": "Moun reyèl. Kouvèti reyèl. Yon apèl telefòn sèlman.",
+    "subtitle": "Blancs Insurance konekte w dirèkteman ak yon ajan otorize ki pale lang ou — pa gen robo, pa gen sant apèl, pa gen devi otomatik.",
+    "primaryCta": "Pale ak yon Ajan",
+    "secondaryCta": "Mande yon Devi"
+  },
+  "trust": {
+    "line1": "Ajan otorize nan Florid",
+    "line2": "Angle, Panyòl & Kreyòl",
+    "line3": "Repons menm jou a"
+  },
+  "services": {
+    "title": "Kouvèti ki fèt pou biznis ou",
+    "subtitle": "Kèlkeswa sa w ap pwoteje, yon ajan ka eksplike w li nan mo senp.",
+    "business": "Komèsyal & Biznis",
+    "businessDesc": "Responsablite jeneral, machin komèsyal, konpansasyon travayè, ak kouvèti pwopriyete ki adapte ak fason ou opere.",
+    "home": "Kay",
+    "homeDesc": "Pwoteje kote fanmi w retounen lakay li, ak kouvèti ki adapte ak reyalite tan Florid.",
+    "auto": "Machin",
+    "autoDesc": "Polis machin pèsonèl ak komèsyal ak pri yon ajan ka eksplike w liy pa liy.",
+    "flood": "Inondasyon",
+    "floodDesc": "Kouvèti inondasyon pou pwopriyete bò lanmè ak andedan peyi a, revize avè w pèsonèlman.",
+    "boat": "Bato",
+    "boatDesc": "Kouvèti sou dlo pou tout gwosè bato, depi ti bato wikenn jiska flòt lapèch."
+  },
+  "agents": {
+    "title": "Rankontre ajan nou yo",
+    "subtitle": "Chak ajan anba a se yon moun reyèl, otorize, ki pare pou ede w — chwazi kèlkeswa moun ki pi fasil pou w kontakte.",
+    "call": "Rele",
+    "email": "Imèl",
+    "message": "Mesaj",
+    "quote": "Mande yon Devi",
+    "languages": "Lang"
+  },
+  "quote": {
+    "title": "Mande yon devi",
+    "subtitle": "Ranpli sa a epi li ale dirèkteman nan bwat imèl yon ajan — pa gen pri otomatik, sèlman yon repons reyèl.",
+    "firstName": "Prenon",
+    "lastName": "Non fanmi",
+    "policyType": "Kalite polis",
+    "policyTypeSelect": "Chwazi yon opsyon",
+    "phone": "Nimewo telefòn",
+    "email": "Imèl",
+    "description": "Di nou yon ti kras sou sa w bezwen",
+    "submit": "Voye Bay yon Ajan",
+    "success": "Mèsi! Yon ajan pral kontakte w byento.",
+    "policyOptions": {
+      "commercial": "Komèsyal / Biznis",
+      "home": "Kay",
+      "auto": "Machin",
+      "flood": "Inondasyon",
+      "boat": "Bato"
+    }
+  },
+  "footer": {
+    "officeLine": "Liy Biwo",
+    "hours": "Orè Biwo",
+    "hoursValue": "Lendi–Samdi, 9:00 AM – 5:00 PM",
+    "closed": "Fèmen Dimanch",
+    "rights": "Tout dwa rezève."
+  },
+  "testimonials": {
+    "title": "Sa kliyan yo di"
+  }
+}
