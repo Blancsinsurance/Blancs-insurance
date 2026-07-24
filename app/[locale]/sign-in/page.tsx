@@ -34,35 +34,58 @@ function SignInForm({ locale }: { locale: string }) {
   async function sendOtp() {
     setSending(true);
     setError(null);
-    const { error } = await supabase.auth.signInWithOtp({ phone });
+
+    console.log("🔄 Attempting OTP to:", phone);
+
+    const { error: supabaseError } = await supabase.auth.signInWithOtp({
+      phone,
+      options: {
+        redirectTo: `${window.location.origin}/${locale}/messages`,
+      },
+    });
+
     setSending(false);
-    if (error) {
-      setError(error.message);
+
+    if (supabaseError) {
+      console.error("❌ Supabase Error:", supabaseError);
+      setError(supabaseError.message + (supabaseError.status ? ` (${supabaseError.status})` : ""));
       return;
     }
+
+    console.log("✅ OTP sent successfully");
     setStep("otp");
   }
 
   async function verifyOtp() {
     setSending(true);
     setError(null);
-    const { error, data } = await supabase.auth.verifyOtp({
+
+    const { error: verifyError, data } = await supabase.auth.verifyOtp({
       phone,
       token: otp,
       type: "sms",
     });
+
     setSending(false);
-    if (error) {
-      setError(error.message);
+
+    if (verifyError) {
+      console.error("❌ Verify Error:", verifyError);
+      setError(verifyError.message);
       return;
     }
-    // Same `users` table the mobile app writes to — sharing this row is what
-    // makes conversation history show up in both places.
+
+    // Upsert user record
     if (data.user) {
       await supabase
         .from("users")
-        .upsert({ id: data.user.id, phone, preferred_language: locale });
+        .upsert({ 
+          id: data.user.id, 
+          phone, 
+          preferred_language: locale 
+        });
     }
+
+    console.log("✅ Sign in successful");
     router.push(returnTo);
   }
 
@@ -89,10 +112,12 @@ function SignInForm({ locale }: { locale: string }) {
                 autoFocus
               />
             </label>
+
             {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+
             <button
               onClick={sendOtp}
-              disabled={sending || phone.length < 7}
+              disabled={sending || phone.length < 10}
               className="mt-6 w-full rounded-full bg-blancs-blue px-6 py-3.5 text-base font-semibold text-white shadow-soft hover:bg-ocean-700 transition-colors disabled:opacity-60"
             >
               {sending ? t("sendingCode") : t("sendCode")}
@@ -116,7 +141,9 @@ function SignInForm({ locale }: { locale: string }) {
                 autoFocus
               />
             </label>
+
             {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+
             <button
               onClick={verifyOtp}
               disabled={sending || otp.length < 4}
