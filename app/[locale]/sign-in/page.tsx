@@ -39,9 +39,6 @@ function SignInForm({ locale }: { locale: string }) {
 
     const { error: supabaseError } = await supabase.auth.signInWithOtp({
       phone,
-      options: {
-        redirectTo: `${window.location.origin}/${locale}/messages`,
-      },
     });
 
     setSending(false);
@@ -74,7 +71,7 @@ function SignInForm({ locale }: { locale: string }) {
       return;
     }
 
-    // Upsert user record
+    // Upsert user record for cross-app sync
     if (data.user) {
       await supabase
         .from("users")
