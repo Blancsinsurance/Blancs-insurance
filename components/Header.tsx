@@ -21,6 +21,9 @@ export default function Header({ locale }: { locale: string }) {
           <Link href={`/${locale}/services`} className="hover:text-blancs-blue">
             {t("services")}
           </Link>
+          <Link href={`/${locale}/request-service`} className="hover:text-blancs-blue">
+            {t("requestService")}
+          </Link>
           <Link href={`/${locale}/agents`} className="hover:text-blancs-blue">
             {t("agents")}
           </Link>
