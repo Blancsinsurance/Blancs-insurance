@@ -11,7 +11,7 @@
   },
   "auth": {
     "title": "Sign in",
-    "subtitle": "Sign in with your phone or email to see your conversations with Blancs Insurance agents.",
+    "subtitle": "Sign in with your phone or email to see your conversations with Blanc's Insurance agents.",
     "phoneLabel": "Phone number",
     "sendCode": "Send Code",
     "sendingCode": "Sending code…",
@@ -30,7 +30,7 @@
   },
   "conversations": {
     "title": "Messages",
-    "subtitle": "Conversations here stay in sync with the Blancs Insurance app.",
+    "subtitle": "Conversations here stay in sync with the Blanc's Insurance app.",
     "loading": "Loading your conversations…",
     "emptyTitle": "No conversations yet",
     "emptyBody": "Start one from the",
@@ -45,9 +45,10 @@
   "hero": {
     "eyebrow": "Licensed. Local. Human.",
     "title": "Real people. Real coverage. One call away.",
-    "subtitle": "Blancs Insurance connects you directly with a licensed agent who speaks your language — no bots, no call centers, no automated quotes.",
+    "subtitle": "Blanc's Insurance connects you directly with a licensed agent who speaks your language — no bots, no call centers, no automated quotes.",
     "primaryCta": "Talk to an Agent",
-    "secondaryCta": "Request a Quote"
+    "secondaryCta": "Request a Quote",
+    "tertiaryCta": "Request Service"
   },
   "trust": {
     "line1": "Licensed Florida agents",
@@ -96,7 +97,7 @@
       "flood": "Flood",
       "boat": "Boat"
     },
-    "smsConsentLabel": "By checking this box, you agree to receive recurring marketing and informational text messages from Blancs Insurance at the phone number provided. Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
+    "smsConsentLabel": "By checking this box, you agree to receive recurring marketing and informational text messages from Blanc's Insurance at the phone number provided. Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
     "smsDisclosure": "Mobile information and messaging consent will not be shared with third parties or affiliates for marketing or promotional purposes. See our",
     "privacyLink": "Privacy Policy",
     "termsLink": "Terms of Service",
@@ -132,7 +133,7 @@
     "title": "Privacy Policy",
     "lastUpdated": "Last updated: July 29, 2026",
     "introTitle": "Introduction",
-    "introBody": "Blancs Insurance (\"we,\" \"us,\" or \"our\") respects your privacy. This Privacy Policy explains how we collect, use, store, and protect personal information when you use our website (blancsins.com), request a quote, sign in, or communicate with our agents by phone, text, or email.",
+    "introBody": "Blanc's Insurance (\"we,\" \"us,\" or \"our\") respects your privacy. This Privacy Policy explains how we collect, use, store, and protect personal information when you use our website (blancsins.com), request a quote, sign in, or communicate with our agents by phone, text, or email.",
     "collectTitle": "Information We Collect",
     "collectBody": "We may collect the following information when you interact with us:",
     "collectItem1": "Contact details: name, phone number, email address",
@@ -147,7 +148,7 @@
     "useItem4": "With your explicit consent, send marketing or informational text messages about our insurance services",
     "smsTitle": "SMS / Text Messaging & Mobile Information",
     "smsBody": "Mobile phone numbers collected for SMS consent will not be shared with third parties or affiliates for marketing or promotional purposes.",
-    "smsDetail": "If you opt in to receive text messages from Blancs Insurance, we use your phone number solely to send the messages you consented to (informational and/or marketing about our insurance products and services). Message frequency varies. Message and data rates may apply. You may opt out at any time by replying STOP. For help, reply HELP. Consent is not a condition of purchasing any goods or services.",
+    "smsDetail": "If you opt in to receive text messages from Blanc's Insurance, we use your phone number solely to send the messages you consented to (informational and/or marketing about our insurance products and services). Message frequency varies. Message and data rates may apply. You may opt out at any time by replying STOP. For help, reply HELP. Consent is not a condition of purchasing any goods or services.",
     "shareTitle": "Sharing of Information",
     "shareBody": "We do not sell your personal information. We may share information with service providers who help us operate our business (e.g., hosting, messaging platforms such as Twilio, authentication providers) under agreements that require them to protect your data and use it only for the services they provide to us. We may also disclose information when required by law or to protect our rights and the safety of our clients.",
     "retainTitle": "Data Retention",
@@ -157,19 +158,19 @@
     "securityTitle": "Security",
     "securityBody": "We implement reasonable technical and organizational measures to protect your personal information. No method of transmission over the Internet is 100% secure; we cannot guarantee absolute security.",
     "contactTitle": "Contact Us",
-    "contactBody": "For privacy questions or requests, contact Blancs Insurance at",
+    "contactBody": "For privacy questions or requests, contact Blanc's Insurance at",
     "orCall": "or call"
   },
   "terms": {
     "title": "Terms of Service",
     "lastUpdated": "Last updated: July 29, 2026",
     "agreementTitle": "Agreement to Terms",
-    "agreementBody": "By accessing or using the Blancs Insurance website (blancsins.com), requesting a quote, signing in, or communicating with our agents, you agree to these Terms of Service. If you do not agree, please do not use our services.",
+    "agreementBody": "By accessing or using the Blanc's Insurance website (blancsins.com), requesting a quote, signing in, or communicating with our agents, you agree to these Terms of Service. If you do not agree, please do not use our services.",
     "servicesTitle": "Our Services",
-    "servicesBody": "Blancs Insurance is a licensed insurance agency in Florida. We connect consumers with licensed agents for home, auto, flood, boat, commercial, and related insurance products. Information on this website is for general informational purposes and does not constitute an offer of insurance or a binding quote. All coverage is subject to underwriting and the terms of the issued policy.",
+    "servicesBody": "Blanc's Insurance is a licensed insurance agency in Florida. We connect consumers with licensed agents for home, auto, flood, boat, commercial, and related insurance products. Information on this website is for general informational purposes and does not constitute an offer of insurance or a binding quote. All coverage is subject to underwriting and the terms of the issued policy.",
     "messagingTitle": "Text Messaging Program",
-    "messagingBody": "If you provide your phone number and opt in to receive text messages from Blancs Insurance:",
-    "messagingItem1": "You consent to receive recurring marketing and/or informational text messages from Blancs Insurance at the number you provided.",
+    "messagingBody": "If you provide your phone number and opt in to receive text messages from Blanc's Insurance:",
+    "messagingItem1": "You consent to receive recurring marketing and/or informational text messages from Blanc's Insurance at the number you provided.",
     "messagingItem2": "Message frequency varies based on your requests and our communications about quotes, policies, and services.",
     "messagingItem3": "Message and data rates may apply according to your mobile carrier plan.",
     "messagingItem4": "Consent is not a condition of purchasing any insurance product or service.",
@@ -181,13 +182,13 @@
     "disclaimerTitle": "Disclaimer",
     "disclaimerBody": "Insurance products are offered only where authorized. Coverage availability, terms, and pricing depend on underwriting guidelines, state regulations, and the specific insurer. We do not guarantee that any particular coverage or rate will be available.",
     "liabilityTitle": "Limitation of Liability",
-    "liabilityBody": "To the fullest extent permitted by law, Blancs Insurance and its agents shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the website or messaging services. Our total liability for any claim related to these services shall not exceed the fees you paid us (if any) in the twelve months preceding the claim.",
+    "liabilityBody": "To the fullest extent permitted by law, Blanc's Insurance and its agents shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the website or messaging services. Our total liability for any claim related to these services shall not exceed the fees you paid us (if any) in the twelve months preceding the claim.",
     "changesTitle": "Changes to These Terms",
     "changesBody": "We may update these Terms from time to time. The \"Last updated\" date at the top will reflect the most recent revision. Continued use of our services after changes constitutes acceptance of the updated Terms.",
     "governingTitle": "Governing Law",
     "governingBody": "These Terms are governed by the laws of the State of Florida, without regard to conflict of law principles. Any disputes shall be resolved in the state or federal courts located in Florida.",
     "contactTitle": "Contact Us",
-    "contactBody": "For questions about these Terms, contact Blancs Insurance at",
+    "contactBody": "For questions about these Terms, contact Blanc's Insurance at",
     "orCall": "or call"
   }
 }

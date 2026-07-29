@@ -26,7 +26,7 @@ export default function Header({ locale }: { locale: string }) {
           onClick={() => setMenuOpen(false)}
           className="font-display text-lg sm:text-xl font-semibold text-ocean-900 whitespace-nowrap"
         >
-          Blancs <span className="text-blancs-blue">Insurance</span>
+          Blanc's <span className="text-blancs-blue">Insurance</span>
         </Link>
 
         {/* Desktop nav — only shows once there's room for everything at once */}

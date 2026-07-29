@@ -35,6 +35,12 @@ export default function Hero({ locale }: { locale: string }) {
           >
             {t("secondaryCta")}
           </Link>
+          <Link
+            href={`/${locale}/request-service`}
+            className="w-full sm:w-auto text-center rounded-full border-2 border-blancs-blue px-8 py-4 text-base font-semibold text-blancs-blue hover:bg-ice-100 transition-colors"
+          >
+            {t("tertiaryCta")}
+          </Link>
         </div>
 
         <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">

@@ -12,9 +12,9 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: "Blancs Insurance — Real People, Real Coverage",
+  title: "Blanc's Insurance — Real People, Real Coverage",
   description:
-    "Blancs Insurance connects you directly with a licensed Florida agent for home, auto, flood, boat, and commercial coverage. English, Español, Kreyòl.",
+    "Blanc's Insurance connects you directly with a licensed Florida agent for home, auto, flood, boat, and commercial coverage. English, Español, Kreyòl.",
 };
 
 export default async function LocaleLayout({

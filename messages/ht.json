@@ -11,7 +11,7 @@
   },
   "auth": {
     "title": "Konekte",
-    "subtitle": "Konekte ak telefòn ou oswa imèl ou pou wè konvèsasyon ou yo ak ajan Blancs Insurance.",
+    "subtitle": "Konekte ak telefòn ou oswa imèl ou pou wè konvèsasyon ou yo ak ajan Blanc's Insurance.",
     "phoneLabel": "Nimewo telefòn",
     "sendCode": "Voye Kòd",
     "sendingCode": "Ap voye kòd…",
@@ -30,7 +30,7 @@
   },
   "conversations": {
     "title": "Mesaj",
-    "subtitle": "Konvèsasyon isit la rete senkronize avèk app Blancs Insurance a.",
+    "subtitle": "Konvèsasyon isit la rete senkronize avèk app Blanc's Insurance a.",
     "loading": "Ap chaje konvèsasyon w yo…",
     "emptyTitle": "Pa gen konvèsasyon toujou",
     "emptyBody": "Kòmanse youn nan",
@@ -45,9 +45,10 @@
   "hero": {
     "eyebrow": "Otorize. Lokal. Imen.",
     "title": "Moun reyèl. Kouvèti reyèl. Yon apèl telefòn sèlman.",
-    "subtitle": "Blancs Insurance konekte w dirèkteman ak yon ajan otorize ki pale lang ou — pa gen robo, pa gen sant apèl, pa gen devi otomatik.",
+    "subtitle": "Blanc's Insurance konekte w dirèkteman ak yon ajan otorize ki pale lang ou — pa gen robo, pa gen sant apèl, pa gen devi otomatik.",
     "primaryCta": "Pale ak yon Ajan",
-    "secondaryCta": "Mande yon Devi"
+    "secondaryCta": "Mande yon Devi",
+    "tertiaryCta": "Mande Sèvis"
   },
   "trust": {
     "line1": "Ajan otorize nan Florid",
@@ -96,7 +97,7 @@
       "flood": "Inondasyon",
       "boat": "Bato"
     },
-    "smsConsentLabel": "Lè w tcheke bwat sa a, ou dakò pou resevwa mesaj tèks maketing ak enfòmasyon repete nan men Blancs Insurance nan nimewo telefòn ou bay la. Tarif mesaj ak done ka aplike. Frekans mesaj yo varye. Reponn STOP pou soti, HELP pou èd.",
+    "smsConsentLabel": "Lè w tcheke bwat sa a, ou dakò pou resevwa mesaj tèks maketing ak enfòmasyon repete nan men Blanc's Insurance nan nimewo telefòn ou bay la. Tarif mesaj ak done ka aplike. Frekans mesaj yo varye. Reponn STOP pou soti, HELP pou èd.",
     "smsDisclosure": "Enfòmasyon mobil ak konsantman mesaj pa pral pataje ak twazyèm pati oswa afilye pou rezon maketing oswa pwomosyon. Gade",
     "privacyLink": "Règleman sou Vi Prive",
     "termsLink": "Tèm Sèvis",
@@ -132,7 +133,7 @@
     "title": "Règleman sou Vi Prive",
     "lastUpdated": "Dènye mizajou: 29 jiyè 2026",
     "introTitle": "Entwodiksyon",
-    "introBody": "Blancs Insurance (\"nou\") respekte vi prive ou. Règleman sou Vi Prive sa a eksplike kijan nou kolekte, itilize, sere, epi pwoteje enfòmasyon pèsonèl lè ou itilize sit entènèt nou an (blancsins.com), mande yon devis, konekte, oswa kominike ak ajan nou yo pa telefòn, tèks, oswa imèl.",
+    "introBody": "Blanc's Insurance (\"nou\") respekte vi prive ou. Règleman sou Vi Prive sa a eksplike kijan nou kolekte, itilize, sere, epi pwoteje enfòmasyon pèsonèl lè ou itilize sit entènèt nou an (blancsins.com), mande yon devis, konekte, oswa kominike ak ajan nou yo pa telefòn, tèks, oswa imèl.",
     "collectTitle": "Enfòmasyon Nou Kolekte",
     "collectBody": "Nou ka kolekte enfòmasyon sa yo lè ou kominike avèk nou:",
     "collectItem1": "Detay kontak: non, nimewo telefòn, adrès imèl",
@@ -147,7 +148,7 @@
     "useItem4": "Avèk konsantman eksplisit ou, voye mesaj tèks maketing oswa enfòmasyon sou sèvis asirans nou yo",
     "smsTitle": "Mesaj SMS / Tèks ak Enfòmasyon Mobil",
     "smsBody": "Nimewo telefòn mobil yo kolekte pou konsantman SMS pa pral pataje ak twazyèm pati oswa afilye pou rezon maketing oswa pwomosyon.",
-    "smsDetail": "Si ou chwazi resevwa mesaj tèks nan men Blancs Insurance, nou itilize nimewo telefòn ou sèlman pou voye mesaj ou te dakò yo (enfòmasyon ak/oswa maketing sou pwodwi ak sèvis asirans nou yo). Frekans mesaj yo varye. Tarif mesaj ak done ka aplike. Ou ka soti nenpòt lè lè ou reponn STOP. Pou èd, reponn HELP. Konsantman se pa yon kondisyon pou achte okenn byen oswa sèvis.",
+    "smsDetail": "Si ou chwazi resevwa mesaj tèks nan men Blanc's Insurance, nou itilize nimewo telefòn ou sèlman pou voye mesaj ou te dakò yo (enfòmasyon ak/oswa maketing sou pwodwi ak sèvis asirans nou yo). Frekans mesaj yo varye. Tarif mesaj ak done ka aplike. Ou ka soti nenpòt lè lè ou reponn STOP. Pou èd, reponn HELP. Konsantman se pa yon kondisyon pou achte okenn byen oswa sèvis.",
     "shareTitle": "Pataje Enfòmasyon",
     "shareBody": "Nou pa vann enfòmasyon pèsonèl ou. Nou ka pataje enfòmasyon ak founisè sèvis ki ede nou opere biznis nou an (egzanp: hosting, platfòm mesaj tankou Twilio, founisè otantifikasyon) anba akò ki mande yo pwoteje done ou epi itilize yo sèlman pou sèvis yo bay nou. Nou ka divilge enfòmasyon tou lè lalwa mande sa oswa pou pwoteje dwa nou ak sekirite kliyan nou yo.",
     "retainTitle": "Retansyon Done",
@@ -157,19 +158,19 @@
     "securityTitle": "Sekirite",
     "securityBody": "Nou mete anplas mezi teknik ak òganizasyonèl rezonab pou pwoteje enfòmasyon pèsonèl ou. Pa gen metòd transmisyon sou Entènèt ki 100% sekirize; nou pa ka garanti sekirite absoli.",
     "contactTitle": "Kontakte Nou",
-    "contactBody": "Pou kesyon oswa demann sou vi prive, kontakte Blancs Insurance nan",
+    "contactBody": "Pou kesyon oswa demann sou vi prive, kontakte Blanc's Insurance nan",
     "orCall": "oswa rele"
   },
   "terms": {
     "title": "Tèm Sèvis",
     "lastUpdated": "Dènye mizajou: 29 jiyè 2026",
     "agreementTitle": "Akò ak Tèm yo",
-    "agreementBody": "Lè ou jwenn aksè oswa itilize sit entènèt Blancs Insurance (blancsins.com), mande yon devis, konekte, oswa kominike ak ajan nou yo, ou dakò ak Tèm Sèvis sa yo. Si ou pa dakò, tanpri pa itilize sèvis nou yo.",
+    "agreementBody": "Lè ou jwenn aksè oswa itilize sit entènèt Blanc's Insurance (blancsins.com), mande yon devis, konekte, oswa kominike ak ajan nou yo, ou dakò ak Tèm Sèvis sa yo. Si ou pa dakò, tanpri pa itilize sèvis nou yo.",
     "servicesTitle": "Sèvis Nou Yo",
-    "servicesBody": "Blancs Insurance se yon ajans asirans ki gen lisans nan Florid. Nou konekte konsomatè yo ak ajan ki gen lisans pou pwodwi asirans kay, oto, inondasyon, bato, komèsyal, ak sa ki gen rapò. Enfòmasyon sou sit sa a se pou enfòmasyon jeneral sèlman epi li pa konstitye yon òf asirans oswa yon devis obligatwa. Tout kouvèti sibi underwriting ak tèm polis ki emèt la.",
+    "servicesBody": "Blanc's Insurance se yon ajans asirans ki gen lisans nan Florid. Nou konekte konsomatè yo ak ajan ki gen lisans pou pwodwi asirans kay, oto, inondasyon, bato, komèsyal, ak sa ki gen rapò. Enfòmasyon sou sit sa a se pou enfòmasyon jeneral sèlman epi li pa konstitye yon òf asirans oswa yon devis obligatwa. Tout kouvèti sibi underwriting ak tèm polis ki emèt la.",
     "messagingTitle": "Pwogram Mesaj Tèks",
-    "messagingBody": "Si ou bay nimewo telefòn ou epi chwazi resevwa mesaj tèks nan men Blancs Insurance:",
-    "messagingItem1": "Ou dakò pou resevwa mesaj tèks maketing ak/oswa enfòmasyon repete nan men Blancs Insurance nan nimewo ou bay la.",
+    "messagingBody": "Si ou bay nimewo telefòn ou epi chwazi resevwa mesaj tèks nan men Blanc's Insurance:",
+    "messagingItem1": "Ou dakò pou resevwa mesaj tèks maketing ak/oswa enfòmasyon repete nan men Blanc's Insurance nan nimewo ou bay la.",
     "messagingItem2": "Frekans mesaj yo varye selon demann ou yo ak kominikasyon nou yo sou devis, polis, ak sèvis.",
     "messagingItem3": "Tarif mesaj ak done ka aplike selon plan operatè mobil ou.",
     "messagingItem4": "Konsantman se pa yon kondisyon pou achte okenn pwodwi oswa sèvis asirans.",
@@ -181,13 +182,13 @@
     "disclaimerTitle": "Deklarasyon",
     "disclaimerBody": "Pwodwi asirans yo ofri sèlman kote yo otorize. Disponibilite kouvèti, tèm, ak pri depann de direktiv underwriting, règleman eta a, ak asiransè spesifik la. Nou pa garanti ke okenn kouvèti oswa tarif patikilye ap disponib.",
     "liabilityTitle": "Limitasyon Responsablite",
-    "liabilityBody": "Nan pi gwo mezi lalwa pèmèt, Blancs Insurance ak ajan li yo pa pral responsab pou okenn domaj endirèk, ensidantèl, espesyal, oswa konsekans ki soti nan itilizasyon sit entènèt la oswa sèvis mesaj yo. Responsablite total nou pou nenpòt reklamasyon ki gen rapò ak sèvis sa yo pa pral depase frè ou te peye nou (si genyen) nan douz mwa anvan reklamasyon an.",
+    "liabilityBody": "Nan pi gwo mezi lalwa pèmèt, Blanc's Insurance ak ajan li yo pa pral responsab pou okenn domaj endirèk, ensidantèl, espesyal, oswa konsekans ki soti nan itilizasyon sit entènèt la oswa sèvis mesaj yo. Responsablite total nou pou nenpòt reklamasyon ki gen rapò ak sèvis sa yo pa pral depase frè ou te peye nou (si genyen) nan douz mwa anvan reklamasyon an.",
     "changesTitle": "Chanjman nan Tèm Sa yo",
     "changesBody": "Nou ka mete ajou Tèm sa yo de tan zan tan. Dat \"Dènye mizajou\" anlè a pral reflete revizyon ki pi resan an. Itilizasyon kontinyèl sèvis nou yo apre chanjman yo konstitye akseptasyon Tèm yo mete ajou.",
     "governingTitle": "Lwa ki Gouvène",
     "governingBody": "Tèm sa yo gouvène pa lwa Eta Florid, san konsidere prensip konfli lwa. Nenpòt diskisyon pral rezoud nan tribinal eta oswa federal ki sitiye nan Florid.",
     "contactTitle": "Kontakte Nou",
-    "contactBody": "Pou kesyon sou Tèm sa yo, kontakte Blancs Insurance nan",
+    "contactBody": "Pou kesyon sou Tèm sa yo, kontakte Blanc's Insurance nan",
     "orCall": "oswa rele"
   }
 }
