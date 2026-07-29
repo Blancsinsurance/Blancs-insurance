@@ -5,6 +5,7 @@ import { locales } from "@/i18n";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/components/AuthProvider";
+import { UnreadProvider } from "@/components/UnreadContext";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -32,9 +33,11 @@ export default async function LocaleLayout({
       <body className="min-h-screen flex flex-col">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
-            <Header locale={locale} />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <UnreadProvider>
+              <Header locale={locale} />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </UnreadProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

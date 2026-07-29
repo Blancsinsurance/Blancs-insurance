@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/components/AuthProvider";
+import { useUnread } from "@/components/UnreadContext";
 import { supabase } from "@/lib/supabase";
 import { findAgentByEmail } from "@/lib/agents";
 
@@ -31,6 +32,7 @@ export default function AgentInboxPage({
   const t = useTranslations("agentPortal");
   const router = useRouter();
   const { session, loading: authLoading, agent, isAgent } = useAuth();
+  const { unreadByConversation } = useUnread();
   const [conversations, setConversations] = useState<ConversationRow[]>([]);
   const [labels, setLabels] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -170,17 +172,31 @@ export default function AgentInboxPage({
         <ul className="flex flex-col gap-3">
           {conversations.map((c) => {
             const label = customerLabel(c.user_id);
+            const unread = unreadByConversation[c.id] ?? 0;
             return (
               <li key={c.id}>
                 <Link
                   href={`/${locale}/agent/messages/${c.id}`}
-                  className="flex items-center gap-4 rounded-xl2 border border-ice-100 p-5 hover:shadow-soft transition-shadow"
+                  className={`flex items-center gap-4 rounded-xl2 border p-5 hover:shadow-soft transition-shadow ${
+                    unread > 0
+                      ? "border-blancs-blue/40 bg-ice-100/60"
+                      : "border-ice-100"
+                  }`}
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ocean-900 font-semibold text-white text-sm">
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ocean-900 font-semibold text-white text-sm">
                     {initials(label)}
+                    {unread > 0 && (
+                      <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                        {unread > 99 ? "99+" : unread}
+                      </span>
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-ocean-900 truncate">
+                    <p
+                      className={`truncate text-ocean-900 ${
+                        unread > 0 ? "font-bold" : "font-semibold"
+                      }`}
+                    >
                       {label}
                     </p>
                     <p className="text-sm text-slate-600">
