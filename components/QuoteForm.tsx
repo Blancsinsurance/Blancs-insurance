@@ -47,9 +47,11 @@ export default function QuoteForm({
   });
 
   async function onSubmit(values: FormValues) {
+    setSubmitError(null);
+
     // Resolve slug or uuid → real uuid (quote_requests.agent_id is uuid)
     const agent = findAgent(preselectedAgentId);
-    const record = {
+    const record: Record<string, unknown> = {
       first_name: values.firstName,
       last_name: values.lastName,
       policy_type: values.policyType,
@@ -61,11 +63,31 @@ export default function QuoteForm({
       sms_consent: values.smsConsent,
     };
 
-    const { error } = await supabase.from("quote_requests").insert(record);
+    let { error } = await supabase.from("quote_requests").insert(record);
+
+    // If the table doesn't have sms_consent yet, retry without it so the
+    // request still lands (column can be added later via QUOTE_REQUESTS_RLS.sql).
+    if (
+      error &&
+      (error.message?.includes("sms_consent") ||
+        error.code === "PGRST204" ||
+        error.message?.toLowerCase().includes("column"))
+    ) {
+      const { sms_consent: _drop, ...withoutConsent } = record;
+      const retry = await supabase.from("quote_requests").insert(withoutConsent);
+      error = retry.error;
+    }
 
     if (error) {
+      console.error("quote_requests insert failed:", error);
+      const detail =
+        error.code === "42501" || /policy|rls|permission/i.test(error.message)
+          ? " (database permission — run supabase/QUOTE_REQUESTS_RLS.sql in the Supabase SQL editor)"
+          : error.message
+            ? ` (${error.message})`
+            : "";
       setSubmitError(
-        "Something went wrong sending your request. Please call our office directly, or try again."
+        `Something went wrong sending your request. Please call our office directly, or try again.${detail}`
       );
       return;
     }
