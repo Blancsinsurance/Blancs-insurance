@@ -32,25 +32,30 @@ export default function RequestService({ locale }: { locale: string }) {
 
     setStarting(true);
 
-    // Prefer Jimmy for service requests — use real uuid, not slug
+    // Prefer Jimmy — real uuid, not slug
     const jimmy =
       findAgent("jimmy-saint-hillaire") ??
       AGENTS.find((a) => a.name.includes("Jimmy")) ??
       AGENTS[0];
     const jimmyId = jimmy.id;
 
-    // Create or get conversation with Jimmy + service context
-    let { data: existing } = await supabase
+    // 1. Existing thread?
+    const { data: existing, error: selectError } = await supabase
       .from("conversations")
       .select("id")
       .eq("user_id", session.user.id)
       .eq("agent_id", jimmyId)
       .maybeSingle();
 
+    if (selectError) {
+      console.error("select conversations:", selectError);
+    }
+
     let conversationId = existing?.id;
 
+    // 2. Create if missing; handle unique conflict
     if (!conversationId) {
-      const { data: created } = await supabase
+      const { data: created, error: insertError } = await supabase
         .from("conversations")
         .insert({
           user_id: session.user.id,
@@ -59,8 +64,29 @@ export default function RequestService({ locale }: { locale: string }) {
         })
         .select("id")
         .single();
-      conversationId = created?.id;
+
+      if (insertError) {
+        if (
+          insertError.code === "23505" ||
+          insertError.code === "409" ||
+          insertError.message?.toLowerCase().includes("duplicate") ||
+          insertError.message?.toLowerCase().includes("unique")
+        ) {
+          const { data: again } = await supabase
+            .from("conversations")
+            .select("id")
+            .eq("user_id", session.user.id)
+            .eq("agent_id", jimmyId)
+            .maybeSingle();
+          conversationId = again?.id;
+        } else {
+          console.error("insert conversations:", insertError);
+        }
+      } else {
+        conversationId = created?.id;
+      }
     } else {
+      // Update metadata on existing thread
       await supabase
         .from("conversations")
         .update({ metadata: { serviceRequest: serviceType } })
