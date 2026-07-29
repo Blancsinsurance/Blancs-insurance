@@ -22,7 +22,7 @@ export default function MessagesPage({
 }) {
   const t = useTranslations("conversations");
   const router = useRouter();
-  const { session, loading: authLoading } = useAuth();
+  const { session, loading: authLoading, isAgent } = useAuth();
   const [conversations, setConversations] = useState<ConversationRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,8 +32,12 @@ export default function MessagesPage({
       router.push(`/${locale}/sign-in?returnTo=/${locale}/messages`);
       return;
     }
+    if (isAgent) {
+      router.push(`/${locale}/agent`);
+      return;
+    }
     load();
-  }, [authLoading, session]);
+  }, [authLoading, session, isAgent]);
 
   async function load() {
     setLoading(true);
