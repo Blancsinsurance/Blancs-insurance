@@ -23,70 +23,29 @@ export default function AgentsGrid({ locale }: { locale: string }) {
 
     setStartingId(agentId);
 
-    // Ensure public.users has this auth user (FK for conversations.user_id)
-    const { error: userError } = await supabase.from("users").upsert(
-      {
-        id: session.user.id,
-        phone: session.user.phone ?? null,
-        email: session.user.email ?? null,
-        preferred_language: locale,
-      },
-      { onConflict: "id" }
-    );
-    if (userError) {
-      console.error("upsert users:", userError);
-      setStartingId(null);
-      return;
-    }
-
-    // 1. Existing thread? (agentId is real uuid)
-    const { data: existing, error: selectError } = await supabase
+    // Reuse an existing open conversation with this agent if one exists —
+    // same rule the mobile app follows, so the two stay in sync rather than
+    // spawning duplicate threads.
+    // agentId is the real uuid from AGENTS[].id
+    const { data: existing } = await supabase
       .from("conversations")
       .select("id")
       .eq("user_id", session.user.id)
       .eq("agent_id", agentId)
       .maybeSingle();
 
-    if (selectError) {
-      console.error("select conversations:", selectError);
-    }
-
     let conversationId = existing?.id;
-
-    // 2. Create if missing; handle unique conflict
     if (!conversationId) {
-      const { data: created, error: insertError } = await supabase
+      const { data: created } = await supabase
         .from("conversations")
         .insert({ user_id: session.user.id, agent_id: agentId })
         .select("id")
         .single();
-
-      if (insertError) {
-        if (
-          insertError.code === "23505" ||
-          insertError.code === "409" ||
-          insertError.message?.toLowerCase().includes("duplicate") ||
-          insertError.message?.toLowerCase().includes("unique")
-        ) {
-          const { data: again } = await supabase
-            .from("conversations")
-            .select("id")
-            .eq("user_id", session.user.id)
-            .eq("agent_id", agentId)
-            .maybeSingle();
-          conversationId = again?.id;
-        } else {
-          console.error("insert conversations:", insertError);
-        }
-      } else {
-        conversationId = created?.id;
-      }
+      conversationId = created?.id;
     }
 
     setStartingId(null);
-    if (conversationId) {
-      router.push(`/${locale}/messages/${conversationId}`);
-    }
+    if (conversationId) router.push(`/${locale}/messages/${conversationId}`);
   }
 
   return (
@@ -142,6 +101,7 @@ export default function AgentsGrid({ locale }: { locale: string }) {
               >
                 <Mail className="h-4 w-4" /> {t("email")}
               </a>
+              {/* Use slug for readable URL; QuoteForm resolves slug → uuid */}
               <Link
                 href={`/${locale}/contact?agent=${agent.slug}`}
                 className="text-sm font-medium text-ocean-900 underline decoration-sky-500 underline-offset-4 hover:text-blancs-blue mt-1"

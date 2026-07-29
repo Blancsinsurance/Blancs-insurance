@@ -7,7 +7,8 @@
     "contact": "Contacto",
     "cta": "Solicitar Cotización",
     "signIn": "Iniciar Sesión",
-    "messagesLink": "Mensajes"
+    "messagesLink": "Mensajes",
+    "agentInbox": "Bandeja del agente"
   },
   "auth": {
     "title": "Iniciar sesión",
@@ -190,5 +191,16 @@
     "contactTitle": "Contáctenos",
     "contactBody": "Para preguntas sobre estos Términos, contacte a Blanc's Insurance en",
     "orCall": "o llame al"
+  },
+  "agentPortal": {
+    "title": "Bandeja del agente",
+    "subtitle": "Conversaciones asignadas a {name}",
+    "loading": "Cargando conversaciones…",
+    "emptyTitle": "Aún no hay conversaciones",
+    "emptyBody": "Cuando un cliente te escriba, aparecerá aquí.",
+    "customer": "Cliente",
+    "active": "Activa",
+    "closed": "Cerrada",
+    "chatTitle": "Conversación"
   }
 }

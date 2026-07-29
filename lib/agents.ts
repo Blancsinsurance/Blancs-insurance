@@ -74,3 +74,10 @@ export function findAgent(idOrSlug: string | null | undefined): Agent | undefine
     AGENTS.find((a) => a.slug === idOrSlug)
   );
 }
+
+/** Match a signed-in user's email to an agent (case-insensitive). */
+export function findAgentByEmail(email: string | null | undefined): Agent | undefined {
+  if (!email) return undefined;
+  const normalized = email.trim().toLowerCase();
+  return AGENTS.find((a) => a.email.toLowerCase() === normalized);
+}

@@ -7,7 +7,8 @@
     "contact": "Contact",
     "cta": "Get a Quote",
     "signIn": "Sign In",
-    "messagesLink": "Messages"
+    "messagesLink": "Messages",
+    "agentInbox": "Agent inbox"
   },
   "auth": {
     "title": "Sign in",
@@ -190,5 +191,16 @@
     "contactTitle": "Contact Us",
     "contactBody": "For questions about these Terms, contact Blanc's Insurance at",
     "orCall": "or call"
+  },
+  "agentPortal": {
+    "title": "Agent inbox",
+    "subtitle": "Conversations assigned to {name}",
+    "loading": "Loading conversations…",
+    "emptyTitle": "No conversations yet",
+    "emptyBody": "When a customer messages you, it will show up here.",
+    "customer": "Customer",
+    "active": "Active",
+    "closed": "Closed",
+    "chatTitle": "Conversation"
   }
 }

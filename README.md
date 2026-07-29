@@ -1,4 +1,4 @@
-# Blancs Insurance — Website (Next.js)
+# Blanc's Insurance — Website (Next.js)
 
 ## Local setup
 ```bash

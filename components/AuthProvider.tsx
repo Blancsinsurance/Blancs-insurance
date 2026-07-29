@@ -1,18 +1,23 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { findAgentByEmail, type Agent } from "@/lib/agents";
 
 type AuthContextValue = {
   session: Session | null;
   loading: boolean;
+  agent: Agent | null;
+  isAgent: boolean;
   signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue>({
   session: null,
   loading: true,
+  agent: null,
+  isAgent: false,
   signOut: async () => {},
 });
 
@@ -31,12 +36,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  const agent = useMemo(() => {
+    const email = session?.user?.email ?? null;
+    return findAgentByEmail(email) ?? null;
+  }, [session]);
+
   async function signOut() {
     await supabase.auth.signOut();
   }
 
   return (
-    <AuthContext.Provider value={{ session, loading, signOut }}>
+    <AuthContext.Provider
+      value={{
+        session,
+        loading,
+        agent,
+        isAgent: !!agent,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

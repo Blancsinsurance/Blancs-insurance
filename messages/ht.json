@@ -7,7 +7,8 @@
     "contact": "Kontakte Nou",
     "cta": "Mande yon Devi",
     "signIn": "Konekte",
-    "messagesLink": "Mesaj"
+    "messagesLink": "Mesaj",
+    "agentInbox": "Bwat ajan"
   },
   "auth": {
     "title": "Konekte",
@@ -190,5 +191,16 @@
     "contactTitle": "Kontakte Nou",
     "contactBody": "Pou kesyon sou Tèm sa yo, kontakte Blanc's Insurance nan",
     "orCall": "oswa rele"
+  },
+  "agentPortal": {
+    "title": "Bwat ajan",
+    "subtitle": "Konvèsasyon asiyen a {name}",
+    "loading": "Ap chaje konvèsasyon yo…",
+    "emptyTitle": "Poko gen konvèsasyon",
+    "emptyBody": "Lè yon kliyan voye mesaj ba ou, li ap parèt isit la.",
+    "customer": "Kliyan",
+    "active": "Aktif",
+    "closed": "Fèmen",
+    "chatTitle": "Konvèsasyon"
   }
 }

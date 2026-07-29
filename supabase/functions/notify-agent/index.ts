@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
         ${escapeHtml(preview)}
       </blockquote>
       <p>
-        <a href="https://blancs-insurance.vercel.app/en/messages/${row.conversation_id}"
+        <a href="https://blancs-insurance.vercel.app/en/agent/messages/${row.conversation_id}"
            style="display:inline-block;background:#1E5AA8;color:#fff;padding:10px 18px;border-radius:999px;text-decoration:none;">
           Open conversation
         </a>

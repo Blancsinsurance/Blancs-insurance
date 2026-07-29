@@ -32,46 +32,25 @@ export default function RequestService({ locale }: { locale: string }) {
 
     setStarting(true);
 
-    // Ensure public.users has this auth user (FK for conversations.user_id)
-    const { error: userError } = await supabase.from("users").upsert(
-      {
-        id: session.user.id,
-        phone: session.user.phone ?? null,
-        email: session.user.email ?? null,
-        preferred_language: locale,
-      },
-      { onConflict: "id" }
-    );
-    if (userError) {
-      console.error("upsert users:", userError);
-      setStarting(false);
-      return;
-    }
-
-    // Prefer Jimmy — real uuid, not slug
+    // Prefer Jimmy for service requests — use real uuid, not slug
     const jimmy =
       findAgent("jimmy-saint-hillaire") ??
       AGENTS.find((a) => a.name.includes("Jimmy")) ??
       AGENTS[0];
     const jimmyId = jimmy.id;
 
-    // 1. Existing thread?
-    const { data: existing, error: selectError } = await supabase
+    // Create or get conversation with Jimmy + service context
+    let { data: existing } = await supabase
       .from("conversations")
       .select("id")
       .eq("user_id", session.user.id)
       .eq("agent_id", jimmyId)
       .maybeSingle();
 
-    if (selectError) {
-      console.error("select conversations:", selectError);
-    }
-
     let conversationId = existing?.id;
 
-    // 2. Create if missing; handle unique conflict
     if (!conversationId) {
-      const { data: created, error: insertError } = await supabase
+      const { data: created } = await supabase
         .from("conversations")
         .insert({
           user_id: session.user.id,
@@ -80,29 +59,8 @@ export default function RequestService({ locale }: { locale: string }) {
         })
         .select("id")
         .single();
-
-      if (insertError) {
-        if (
-          insertError.code === "23505" ||
-          insertError.code === "409" ||
-          insertError.message?.toLowerCase().includes("duplicate") ||
-          insertError.message?.toLowerCase().includes("unique")
-        ) {
-          const { data: again } = await supabase
-            .from("conversations")
-            .select("id")
-            .eq("user_id", session.user.id)
-            .eq("agent_id", jimmyId)
-            .maybeSingle();
-          conversationId = again?.id;
-        } else {
-          console.error("insert conversations:", insertError);
-        }
-      } else {
-        conversationId = created?.id;
-      }
+      conversationId = created?.id;
     } else {
-      // Update metadata on existing thread
       await supabase
         .from("conversations")
         .update({ metadata: { serviceRequest: serviceType } })

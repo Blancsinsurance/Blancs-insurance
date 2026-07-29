@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Paperclip, Send } from "lucide-react";
+import { ArrowLeft, Paperclip, Send } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { findAgent } from "@/lib/agents";
 
 type Message = {
   id: string;
@@ -17,16 +17,16 @@ type Message = {
   created_at: string;
 };
 
-export default function ChatPage({
+export default function AgentChatPage({
   params: { locale, conversationId },
 }: {
   params: { locale: string; conversationId: string };
 }) {
-  const t = useTranslations("chat");
+  const t = useTranslations("agentPortal");
+  const chatT = useTranslations("chat");
   const router = useRouter();
-  const { session, loading: authLoading } = useAuth();
+  const { session, loading: authLoading, agent, isAgent } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [agentId, setAgentId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,18 +36,28 @@ export default function ChatPage({
     if (authLoading) return;
     if (!session) {
       router.push(
-        `/${locale}/sign-in?returnTo=/${locale}/messages/${conversationId}`
+        `/${locale}/sign-in?returnTo=/${locale}/agent/messages/${conversationId}`
       );
+      return;
     }
-  }, [authLoading, session]);
+    if (!isAgent) {
+      router.push(`/${locale}/messages`);
+    }
+  }, [authLoading, session, isAgent, locale, conversationId, router]);
 
   const loadMessages = useCallback(async () => {
-    const { data: convo } = await supabase
-      .from("conversations")
-      .select("agent_id")
-      .eq("id", conversationId)
-      .maybeSingle();
-    setAgentId(convo?.agent_id ?? null);
+    // Confirm this conversation belongs to this agent
+    if (agent) {
+      const { data: convo } = await supabase
+        .from("conversations")
+        .select("id, agent_id")
+        .eq("id", conversationId)
+        .maybeSingle();
+      if (convo && convo.agent_id !== agent.id) {
+        router.push(`/${locale}/agent`);
+        return;
+      }
+    }
 
     const { data } = await supabase
       .from("messages")
@@ -55,14 +65,14 @@ export default function ChatPage({
       .eq("conversation_id", conversationId)
       .order("created_at", { ascending: true });
     setMessages(data ?? []);
-  }, [conversationId]);
+  }, [conversationId, agent, locale, router]);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || !isAgent) return;
     loadMessages();
 
     const channel = supabase
-      .channel(`messages:${conversationId}`)
+      .channel(`agent-messages:${conversationId}`)
       .on(
         "postgres_changes",
         {
@@ -80,19 +90,19 @@ export default function ChatPage({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [session, conversationId, loadMessages]);
+  }, [session, isAgent, conversationId, loadMessages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   async function sendMessage() {
-    if (!draft.trim() || !session) return;
+    if (!draft.trim() || !session || !agent) return;
     const body = draft.trim();
     setDraft("");
     await supabase.from("messages").insert({
       conversation_id: conversationId,
-      sender_type: "user",
+      sender_type: "agent",
       sender_id: session.user.id,
       body,
     });
@@ -100,7 +110,7 @@ export default function ChatPage({
 
   async function attachFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (!file || !session) return;
+    if (!file || !session || !agent) return;
     setUploading(true);
 
     const path = `${conversationId}/${Date.now()}-${file.name}`;
@@ -117,28 +127,35 @@ export default function ChatPage({
 
     await supabase.from("messages").insert({
       conversation_id: conversationId,
-      sender_type: "user",
+      sender_type: "agent",
       sender_id: session.user.id,
       attachment_url: publicUrl.publicUrl,
     });
   }
 
-  const agentName = findAgent(agentId)?.name ?? "Agent";
-
-  if (authLoading || !session) return null;
+  if (authLoading || !session || !isAgent) return null;
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-10 flex flex-col h-[calc(100vh-80px)]">
-      <h1 className="font-display text-xl font-semibold text-ocean-900 pb-4 border-b border-ice-100">
-        {agentName}
-      </h1>
+      <div className="flex items-center gap-3 pb-4 border-b border-ice-100">
+        <Link
+          href={`/${locale}/agent`}
+          className="rounded-full p-2 text-ocean-900 hover:bg-ice-100"
+          aria-label="Back to inbox"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+        <h1 className="font-display text-xl font-semibold text-ocean-900">
+          {t("chatTitle")}
+        </h1>
+      </div>
 
       <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-3">
         {messages.map((m) => (
           <div
             key={m.id}
             className={`max-w-[75%] rounded-xl2 px-4 py-3 text-sm ${
-              m.sender_type === "user"
+              m.sender_type === "agent"
                 ? "self-end bg-blancs-blue text-white"
                 : "self-start bg-ice-100 text-ocean-900"
             }`}
@@ -151,7 +168,7 @@ export default function ChatPage({
                 rel="noreferrer"
                 className="underline text-sm"
               >
-                📎 {t("attachment")}
+                📎 {chatT("attachment")}
               </a>
             )}
           </div>
@@ -185,7 +202,7 @@ export default function ChatPage({
             }
           }}
           rows={1}
-          placeholder={t("placeholder")}
+          placeholder={chatT("placeholder")}
           className="flex-1 resize-none rounded-xl2 bg-ice-100 px-4 py-3 text-sm"
         />
         <button

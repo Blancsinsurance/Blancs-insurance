@@ -9,6 +9,9 @@ import { supabase } from "@/lib/supabase";
 type AuthMethod = "phone" | "email";
 type Step = "input" | "otp";
 
+// Supabase phone auth requires E.164 (+1XXXXXXXXXX). Most users will just
+// type digits (or a formatted US number), so assume US/+1 unless they've
+// already typed a leading +.
 function toE164(raw: string): string {
   const trimmed = raw.trim();
   if (trimmed.startsWith("+")) {
@@ -52,18 +55,22 @@ function SignInForm({ locale }: { locale: string }) {
     setError(null);
 
     if (method === "phone") {
+      console.log("🔄 Attempting phone OTP to:", toE164(phone));
       const { error: supabaseError } = await supabase.auth.signInWithOtp({
         phone: toE164(phone),
       });
       setSending(false);
       if (supabaseError) {
+        console.error("❌ Supabase Error:", supabaseError);
         setError(
           supabaseError.message +
             (supabaseError.status ? ` (${supabaseError.status})` : "")
         );
         return;
       }
+      console.log("✅ Phone OTP sent successfully");
     } else {
+      console.log("🔄 Attempting email OTP to:", email);
       const { error: supabaseError } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
@@ -72,12 +79,14 @@ function SignInForm({ locale }: { locale: string }) {
       });
       setSending(false);
       if (supabaseError) {
+        console.error("❌ Supabase Error:", supabaseError);
         setError(
           supabaseError.message +
             (supabaseError.status ? ` (${supabaseError.status})` : "")
         );
         return;
       }
+      console.log("✅ Email OTP sent successfully");
     }
 
     setStep("otp");
@@ -90,11 +99,12 @@ function SignInForm({ locale }: { locale: string }) {
     if (method === "phone") {
       const { error: verifyError, data } = await supabase.auth.verifyOtp({
         phone: toE164(phone),
-        token: otp.trim(),
+        token: otp,
         type: "sms",
       });
       setSending(false);
       if (verifyError) {
+        console.error("❌ Verify Error:", verifyError);
         setError(verifyError.message);
         return;
       }
@@ -106,37 +116,27 @@ function SignInForm({ locale }: { locale: string }) {
         });
       }
     } else {
-      // Try "email" first (Magic Link / signInWithOtp), then "signup" (Confirm signup)
-      let result = await supabase.auth.verifyOtp({
+      const { error: verifyError, data } = await supabase.auth.verifyOtp({
         email: email.trim(),
-        token: otp.trim(),
+        token: otp,
         type: "email",
       });
-
-      if (result.error) {
-        result = await supabase.auth.verifyOtp({
-          email: email.trim(),
-          token: otp.trim(),
-          type: "signup",
-        });
-      }
-
       setSending(false);
-
-      if (result.error) {
-        setError(result.error.message);
+      if (verifyError) {
+        console.error("❌ Verify Error:", verifyError);
+        setError(verifyError.message);
         return;
       }
-
-      if (result.data.user) {
+      if (data.user) {
         await supabase.from("users").upsert({
-          id: result.data.user.id,
+          id: data.user.id,
           email: email.trim(),
           preferred_language: locale,
         });
       }
     }
 
+    console.log("✅ Sign in successful");
     router.push(returnTo);
   }
 
@@ -160,6 +160,7 @@ function SignInForm({ locale }: { locale: string }) {
       <p className="mt-3 text-center text-slate-600">{t("subtitle")}</p>
 
       <div className="mt-10 rounded-xl2 border border-ice-100 p-8 shadow-soft">
+        {/* Method toggle */}
         {step === "input" && (
           <div className="flex rounded-full bg-ice-100 p-1 mb-6">
             <button
@@ -274,7 +275,7 @@ function SignInForm({ locale }: { locale: string }) {
                 type="text"
                 inputMode="numeric"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 8))}
+                onChange={(e) => setOtp(e.target.value)}
                 placeholder="123456"
                 className="rounded-xl border border-ice-100 px-4 py-3 text-base tracking-widest"
                 autoFocus
