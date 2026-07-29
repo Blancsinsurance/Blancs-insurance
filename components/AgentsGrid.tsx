@@ -23,7 +23,23 @@ export default function AgentsGrid({ locale }: { locale: string }) {
 
     setStartingId(agentId);
 
-    // 1. Try to find existing thread (agentId is real uuid)
+    // Ensure public.users has this auth user (FK for conversations.user_id)
+    const { error: userError } = await supabase.from("users").upsert(
+      {
+        id: session.user.id,
+        phone: session.user.phone ?? null,
+        email: session.user.email ?? null,
+        preferred_language: locale,
+      },
+      { onConflict: "id" }
+    );
+    if (userError) {
+      console.error("upsert users:", userError);
+      setStartingId(null);
+      return;
+    }
+
+    // 1. Existing thread? (agentId is real uuid)
     const { data: existing, error: selectError } = await supabase
       .from("conversations")
       .select("id")
@@ -37,7 +53,7 @@ export default function AgentsGrid({ locale }: { locale: string }) {
 
     let conversationId = existing?.id;
 
-    // 2. Create only if missing; treat unique conflict as “already exists”
+    // 2. Create if missing; handle unique conflict
     if (!conversationId) {
       const { data: created, error: insertError } = await supabase
         .from("conversations")
@@ -46,7 +62,6 @@ export default function AgentsGrid({ locale }: { locale: string }) {
         .single();
 
       if (insertError) {
-        // 23505 = unique_violation; 409 from PostgREST
         if (
           insertError.code === "23505" ||
           insertError.code === "409" ||

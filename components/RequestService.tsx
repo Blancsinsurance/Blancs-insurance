@@ -32,6 +32,22 @@ export default function RequestService({ locale }: { locale: string }) {
 
     setStarting(true);
 
+    // Ensure public.users has this auth user (FK for conversations.user_id)
+    const { error: userError } = await supabase.from("users").upsert(
+      {
+        id: session.user.id,
+        phone: session.user.phone ?? null,
+        email: session.user.email ?? null,
+        preferred_language: locale,
+      },
+      { onConflict: "id" }
+    );
+    if (userError) {
+      console.error("upsert users:", userError);
+      setStarting(false);
+      return;
+    }
+
     // Prefer Jimmy — real uuid, not slug
     const jimmy =
       findAgent("jimmy-saint-hillaire") ??
