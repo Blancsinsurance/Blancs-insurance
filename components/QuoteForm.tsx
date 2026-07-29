@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { findAgent } from "@/lib/agents";
 
 const schema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -46,6 +47,8 @@ export default function QuoteForm({
   });
 
   async function onSubmit(values: FormValues) {
+    // Resolve slug or uuid → real uuid (quote_requests.agent_id is uuid)
+    const agent = findAgent(preselectedAgentId);
     const record = {
       first_name: values.firstName,
       last_name: values.lastName,
@@ -53,7 +56,7 @@ export default function QuoteForm({
       phone: values.phone,
       email: values.email,
       description: values.description ?? "",
-      agent_id: preselectedAgentId ?? null,
+      agent_id: agent?.id ?? null,
       status: "new",
       sms_consent: values.smsConsent,
     };

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { supabase } from "@/lib/supabase";
-import { AGENTS } from "@/lib/agents";
+import { AGENTS, findAgent } from "@/lib/agents";
 import { MessageCircle } from "lucide-react";
 
 const SERVICE_OPTIONS = [
@@ -22,7 +22,6 @@ export default function RequestService({ locale }: { locale: string }) {
   const t = useTranslations("requestService");
   const router = useRouter();
   const { session } = useAuth();
-  const [selectedService, setSelectedService] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
 
   const startServiceChat = async (serviceType: string) => {
@@ -33,8 +32,12 @@ export default function RequestService({ locale }: { locale: string }) {
 
     setStarting(true);
 
-    // Prefer Jimmy first for service requests
-    const jimmyId = "jimmy-saint-hillaire";
+    // Prefer Jimmy for service requests — use real uuid, not slug
+    const jimmy =
+      findAgent("jimmy-saint-hillaire") ??
+      AGENTS.find((a) => a.name.includes("Jimmy")) ??
+      AGENTS[0];
+    const jimmyId = jimmy.id;
 
     // Create or get conversation with Jimmy + service context
     let { data: existing } = await supabase
@@ -52,13 +55,12 @@ export default function RequestService({ locale }: { locale: string }) {
         .insert({
           user_id: session.user.id,
           agent_id: jimmyId,
-          metadata: { serviceRequest: serviceType }, // for agent context
+          metadata: { serviceRequest: serviceType },
         })
         .select("id")
         .single();
       conversationId = created?.id;
     } else {
-      // Update metadata on existing thread
       await supabase
         .from("conversations")
         .update({ metadata: { serviceRequest: serviceType } })
@@ -101,7 +103,8 @@ export default function RequestService({ locale }: { locale: string }) {
       </div>
 
       <p className="mt-12 text-center text-sm text-slate-500">
-        All service requests are handled by real agents — usually Jimmy or your preferred agent.
+        All service requests are handled by real agents — usually Jimmy or your
+        preferred agent.
       </p>
     </section>
   );

@@ -17,9 +17,7 @@ export default function AgentsGrid({ locale }: { locale: string }) {
 
   async function startConversation(agentId: string) {
     if (!session) {
-      router.push(
-        `/${locale}/sign-in?returnTo=/${locale}/agents`
-      );
+      router.push(`/${locale}/sign-in?returnTo=/${locale}/agents`);
       return;
     }
 
@@ -28,6 +26,7 @@ export default function AgentsGrid({ locale }: { locale: string }) {
     // Reuse an existing open conversation with this agent if one exists —
     // same rule the mobile app follows, so the two stay in sync rather than
     // spawning duplicate threads.
+    // agentId is the real uuid from AGENTS[].id
     const { data: existing } = await supabase
       .from("conversations")
       .select("id")
@@ -102,8 +101,9 @@ export default function AgentsGrid({ locale }: { locale: string }) {
               >
                 <Mail className="h-4 w-4" /> {t("email")}
               </a>
+              {/* Use slug for readable URL; QuoteForm resolves slug → uuid */}
               <Link
-                href={`/${locale}/contact?agent=${agent.id}`}
+                href={`/${locale}/contact?agent=${agent.slug}`}
                 className="text-sm font-medium text-ocean-900 underline decoration-sky-500 underline-offset-4 hover:text-blancs-blue mt-1"
               >
                 {t("quote")}
