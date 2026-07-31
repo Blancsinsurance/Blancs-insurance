@@ -98,7 +98,8 @@
       "flood": "Inundación",
       "boat": "Embarcación"
     },
-    "smsConsentLabel": "Sí, deseo recibir mensajes de texto recurrentes de marketing e informativos de Blanc's Insurance al número de teléfono proporcionado (opcional — no es necesario para recibir una cotización o servicio). Pueden aplicar tarifas de mensajes y datos. La frecuencia de mensajes varía. Responde STOP para darte de baja, HELP para ayuda.",
+    "smsConsentInformationalLabel": "Sí, envíenme mensajes de texto informativos sobre mi cotización o póliza (por ejemplo, recordatorios de citas y actualizaciones de póliza) de Blanc's Insurance al número de teléfono proporcionado (opcional — no es necesario para recibir una cotización o servicio). Pueden aplicar tarifas de mensajes y datos. La frecuencia de los mensajes varía. Responda STOP para cancelar, HELP para ayuda.",
+    "smsConsentMarketingLabel": "Sí, envíenme mensajes de texto de marketing sobre promociones y ofertas de Blanc's Insurance al número de teléfono proporcionado (opcional — no es necesario para recibir una cotización o servicio). Pueden aplicar tarifas de mensajes y datos. La frecuencia de los mensajes varía. Responda STOP para cancelar, HELP para ayuda.",
     "smsDisclosure": "La información móvil y el consentimiento de mensajería no se compartirán con terceros ni afiliados con fines de marketing o promocionales. Consulta nuestra",
     "privacyLink": "Política de Privacidad",
     "termsLink": "Términos de Servicio",
@@ -114,7 +115,8 @@
       "addDriver": "Agregar Conductor",
       "adjustCoverage": "Ajustar Coberturas",
       "appAssistance": "Asistencia con la App",
-      "discounts": "Preguntar por Descuentos"
+      "discounts": "Preguntar por Descuentos",
+      "getIdCard": "Obtener Tarjeta de Identificación"
     },
     "startChat": "Iniciar Chat con Agente"
   },
@@ -149,7 +151,7 @@
     "useItem4": "Con su consentimiento explícito, enviar mensajes de texto de marketing o informativos sobre nuestros servicios de seguros",
     "smsTitle": "Mensajes SMS / de Texto e Información Móvil",
     "smsBody": "Los números de teléfono móvil recopilados para el consentimiento de SMS no se compartirán con terceros ni afiliados con fines de marketing o promocionales.",
-    "smsDetail": "Si opta por recibir mensajes de texto de Blanc's Insurance, usamos su número de teléfono únicamente para enviar los mensajes a los que consintió (informativos y/o de marketing sobre nuestros productos y servicios de seguros). La frecuencia de mensajes varía. Pueden aplicar tarifas de mensajes y datos. Puede darse de baja en cualquier momento respondiendo STOP. Para ayuda, responda HELP. El consentimiento no es una condición para comprar bienes o servicios.",
+    "smsDetail": "Si opta por recibir mensajes de texto de Blanc's Insurance, usamos su número de teléfono únicamente para enviar los mensajes que usted consintió por separado. Puede optar por mensajes informativos (por ejemplo, recordatorios de citas, actualizaciones de póliza), mensajes de marketing (por ejemplo, promociones y ofertas), ambos, o ninguno — cada consentimiento es independiente. La frecuencia de los mensajes varía. Pueden aplicar tarifas de mensajes y datos. Puede cancelar en cualquier momento respondiendo STOP. Para ayuda, responda HELP. El consentimiento no es una condición para comprar ningún bien o servicio.",
     "shareTitle": "Compartir Información",
     "shareBody": "No vendemos su información personal. Podemos compartir información con proveedores de servicios que nos ayudan a operar nuestro negocio (p. ej., alojamiento, plataformas de mensajería como Twilio, proveedores de autenticación) bajo acuerdos que les exigen proteger sus datos y usarlos solo para los servicios que nos prestan. También podemos divulgar información cuando lo exija la ley o para proteger nuestros derechos y la seguridad de nuestros clientes.",
     "retainTitle": "Retención de Datos",

@@ -17,7 +17,11 @@ const schema = z.object({
   phone: z.string().min(7, "Enter a valid phone number"),
   email: z.string().email("Enter a valid email"),
   description: z.string().optional(),
-  smsConsent: z.boolean().optional().default(false),
+  // Kept as two SEPARATE, independent opt-ins per Twilio A2P 10DLC rule
+  // (Error 30913): marketing consent must never be bundled with
+  // informational/transactional consent in a single checkbox.
+  smsConsentInformational: z.boolean().optional().default(false),
+  smsConsentMarketing: z.boolean().optional().default(false),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -40,7 +44,8 @@ export default function QuoteForm({
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      smsConsent: false,
+      smsConsentInformational: false,
+      smsConsentMarketing: false,
     },
   });
 
@@ -58,20 +63,27 @@ export default function QuoteForm({
       description: values.description ?? "",
       agent_id: agent?.id ?? null,
       status: "new",
-      sms_consent: values.smsConsent,
+      // Two separate, independently-tracked opt-ins — never combine these
+      // into one column/consent value (Twilio A2P 10DLC Error 30913).
+      sms_consent_informational: values.smsConsentInformational,
+      sms_consent_marketing: values.smsConsentMarketing,
     };
 
     let { error } = await supabase.from("quote_requests").insert(record);
 
-    // If the table doesn't have sms_consent yet, retry without it so the
-    // request still lands (column can be added later via QUOTE_REQUESTS_RLS.sql).
+    // If the table doesn't have these columns yet, retry without them so the
+    // request still lands (columns can be added via supabase/QUOTE_REQUESTS_RLS.sql).
     if (
       error &&
       (error.message?.includes("sms_consent") ||
         error.code === "PGRST204" ||
         error.message?.toLowerCase().includes("column"))
     ) {
-      const { sms_consent: _drop, ...withoutConsent } = record;
+      const {
+        sms_consent_informational: _drop1,
+        sms_consent_marketing: _drop2,
+        ...withoutConsent
+      } = record;
       const retry = await supabase.from("quote_requests").insert(withoutConsent);
       error = retry.error;
     }
@@ -154,20 +166,36 @@ export default function QuoteForm({
         <textarea {...register("description")} rows={4} className="input" />
       </Field>
 
-      {/* SMS opt-in — must remain OPTIONAL. Consent to receive texts can never
-          be a condition of getting a quote/service (A2P 10DLC / TCPA rule).
-          Do not add a .refine(v => v === true) back onto smsConsent. */}
-      <div className="sm:col-span-2 space-y-3">
+      {/* SMS opt-ins — must remain OPTIONAL and INDEPENDENT of each other.
+          Consent to receive texts can never be a condition of getting a
+          quote/service (A2P 10DLC / TCPA rule), and marketing consent must
+          never be bundled with informational/transactional consent in a
+          single checkbox (Twilio A2P 10DLC Error 30913).
+          Do not add a .refine(v => v === true) back onto either field, and
+          do not merge these two checkboxes back into one. */}
+      <div className="sm:col-span-2 space-y-4">
         <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
-            {...register("smsConsent")}
+            {...register("smsConsentInformational")}
             className="mt-1 h-4 w-4 rounded border-slate-300 text-blancs-blue focus:ring-blancs-blue"
           />
           <span className="text-sm text-slate-700 leading-relaxed">
-            {t("smsConsentLabel")}
+            {t("smsConsentInformationalLabel")}
           </span>
         </label>
+
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            {...register("smsConsentMarketing")}
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-blancs-blue focus:ring-blancs-blue"
+          />
+          <span className="text-sm text-slate-700 leading-relaxed">
+            {t("smsConsentMarketingLabel")}
+          </span>
+        </label>
+
         <p className="text-xs text-slate-500 leading-relaxed">
           {t("smsDisclosure")}{" "}
           <Link

@@ -98,7 +98,8 @@
       "flood": "Flood",
       "boat": "Boat"
     },
-    "smsConsentLabel": "Yes, send me recurring marketing and informational text messages from Blanc's Insurance at the phone number provided (optional — not required to receive a quote or service). Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
+    "smsConsentInformationalLabel": "Yes, send me informational text messages about my quote or policy (for example, appointment reminders and policy updates) from Blanc's Insurance at the phone number provided (optional — not required to receive a quote or service). Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
+    "smsConsentMarketingLabel": "Yes, send me marketing text messages about promotions and offers from Blanc's Insurance at the phone number provided (optional — not required to receive a quote or service). Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
     "smsDisclosure": "Mobile information and messaging consent will not be shared with third parties or affiliates for marketing or promotional purposes. See our",
     "privacyLink": "Privacy Policy",
     "termsLink": "Terms of Service",
@@ -114,7 +115,8 @@
       "addDriver": "Add Driver",
       "adjustCoverage": "Adjust Coverages",
       "appAssistance": "App Assistance",
-      "discounts": "Ask About Discounts"
+      "discounts": "Ask About Discounts",
+      "getIdCard": "Get ID Card"
     },
     "startChat": "Start Chat with Agent"
   },
@@ -149,7 +151,7 @@
     "useItem4": "With your explicit consent, send marketing or informational text messages about our insurance services",
     "smsTitle": "SMS / Text Messaging & Mobile Information",
     "smsBody": "Mobile phone numbers collected for SMS consent will not be shared with third parties or affiliates for marketing or promotional purposes.",
-    "smsDetail": "If you opt in to receive text messages from Blanc's Insurance, we use your phone number solely to send the messages you consented to (informational and/or marketing about our insurance products and services). Message frequency varies. Message and data rates may apply. You may opt out at any time by replying STOP. For help, reply HELP. Consent is not a condition of purchasing any goods or services.",
+    "smsDetail": "If you opt in to receive text messages from Blanc's Insurance, we use your phone number solely to send the messages you separately consented to. You may opt in to informational messages (e.g., appointment reminders, policy updates), marketing messages (e.g., promotions and offers), both, or neither — each consent is independent. Message frequency varies. Message and data rates may apply. You may opt out at any time by replying STOP. For help, reply HELP. Consent is not a condition of purchasing any goods or services.",
     "shareTitle": "Sharing of Information",
     "shareBody": "We do not sell your personal information. We may share information with service providers who help us operate our business (e.g., hosting, messaging platforms such as Twilio, authentication providers) under agreements that require them to protect your data and use it only for the services they provide to us. We may also disclose information when required by law or to protect our rights and the safety of our clients.",
     "retainTitle": "Data Retention",

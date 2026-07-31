@@ -98,7 +98,8 @@
       "flood": "Inondasyon",
       "boat": "Bato"
     },
-    "smsConsentLabel": "Wi, mwen vle resevwa mesaj tèks maketing ak enfòmasyon repete nan men Blanc's Insurance nan nimewo telefòn ou bay la (opsyonèl — pa obligatwa pou resevwa yon devi oswa sèvis). Tarif mesaj ak done ka aplike. Frekans mesaj yo varye. Reponn STOP pou soti, HELP pou èd.",
+    "smsConsentInformationalLabel": "Wi, voye mesaj tèks enfòmasyon sou kotasyon oswa polis mwen an (pa egzanp, rapèl randevou ak mizajou polis) nan men Blanc's Insurance nan nimewo telefòn ki bay la (opsyonèl — li pa obligatwa pou resevwa yon kotasyon oswa yon sèvis). Ka gen frè mesaj ak done. Frekans mesaj yo varye. Reponn STOP pou dekonekte, HELP pou èd.",
+    "smsConsentMarketingLabel": "Wi, voye mesaj tèks maketing sou pwomosyon ak òf nan men Blanc's Insurance nan nimewo telefòn ki bay la (opsyonèl — li pa obligatwa pou resevwa yon kotasyon oswa yon sèvis). Ka gen frè mesaj ak done. Frekans mesaj yo varye. Reponn STOP pou dekonekte, HELP pou èd.",
     "smsDisclosure": "Enfòmasyon mobil ak konsantman mesaj pa pral pataje ak twazyèm pati oswa afilye pou rezon maketing oswa pwomosyon. Gade",
     "privacyLink": "Règleman sou Vi Prive",
     "termsLink": "Tèm Sèvis",
@@ -114,7 +115,8 @@
       "addDriver": "Ajoute Chofè",
       "adjustCoverage": "Ajiste Kouvèti yo",
       "appAssistance": "Asistans ak App la",
-      "discounts": "Mande sou Rabè"
+      "discounts": "Mande sou Rabè",
+      "getIdCard": "Jwenn Kat Idantifikasyon"
     },
     "startChat": "Kòmanse Chat ak Ajan"
   },
@@ -149,7 +151,7 @@
     "useItem4": "Avèk konsantman eksplisit ou, voye mesaj tèks maketing oswa enfòmasyon sou sèvis asirans nou yo",
     "smsTitle": "Mesaj SMS / Tèks ak Enfòmasyon Mobil",
     "smsBody": "Nimewo telefòn mobil yo kolekte pou konsantman SMS pa pral pataje ak twazyèm pati oswa afilye pou rezon maketing oswa pwomosyon.",
-    "smsDetail": "Si ou chwazi resevwa mesaj tèks nan men Blanc's Insurance, nou itilize nimewo telefòn ou sèlman pou voye mesaj ou te dakò yo (enfòmasyon ak/oswa maketing sou pwodwi ak sèvis asirans nou yo). Frekans mesaj yo varye. Tarif mesaj ak done ka aplike. Ou ka soti nenpòt lè lè ou reponn STOP. Pou èd, reponn HELP. Konsantman se pa yon kondisyon pou achte okenn byen oswa sèvis.",
+    "smsDetail": "Si ou chwazi resevwa mesaj tèks nan men Blanc's Insurance, nou itilize nimewo telefòn ou sèlman pou voye mesaj ou te dakò separeman resevwa yo. Ou ka chwazi mesaj enfòmasyon (pa egzanp, rapèl randevou, mizajou polis), mesaj maketing (pa egzanp, pwomosyon ak òf), toude, oswa okenn — chak konsantman endepandan. Frekans mesaj yo varye. Ka gen frè mesaj ak done. Ou ka dekonekte nenpòt kilè lè ou reponn STOP. Pou èd, reponn HELP. Konsantman pa yon kondisyon pou achte okenn byen oswa sèvis.",
     "shareTitle": "Pataje Enfòmasyon",
     "shareBody": "Nou pa vann enfòmasyon pèsonèl ou. Nou ka pataje enfòmasyon ak founisè sèvis ki ede nou opere biznis nou an (egzanp: hosting, platfòm mesaj tankou Twilio, founisè otantifikasyon) anba akò ki mande yo pwoteje done ou epi itilize yo sèlman pou sèvis yo bay nou. Nou ka divilge enfòmasyon tou lè lalwa mande sa oswa pou pwoteje dwa nou ak sekirite kliyan nou yo.",
     "retainTitle": "Retansyon Done",

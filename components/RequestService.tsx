@@ -10,6 +10,7 @@ import { MessageCircle } from "lucide-react";
 
 const SERVICE_OPTIONS = [
   { id: "policyNumber", labelKey: "policyNumber" },
+  { id: "getIdCard", labelKey: "getIdCard" },
   { id: "makePayment", labelKey: "makePayment" },
   { id: "addVehicle", labelKey: "addVehicle" },
   { id: "addDriver", labelKey: "addDriver" },
