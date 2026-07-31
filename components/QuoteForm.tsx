@@ -17,9 +17,7 @@ const schema = z.object({
   phone: z.string().min(7, "Enter a valid phone number"),
   email: z.string().email("Enter a valid email"),
   description: z.string().optional(),
-  smsConsent: z.boolean().refine((v) => v === true, {
-    message: "You must agree to receive text messages to continue",
-  }),
+  smsConsent: z.boolean().optional().default(false),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -156,7 +154,9 @@ export default function QuoteForm({
         <textarea {...register("description")} rows={4} className="input" />
       </Field>
 
-      {/* SMS opt-in — required for A2P 10DLC compliance */}
+      {/* SMS opt-in — must remain OPTIONAL. Consent to receive texts can never
+          be a condition of getting a quote/service (A2P 10DLC / TCPA rule).
+          Do not add a .refine(v => v === true) back onto smsConsent. */}
       <div className="sm:col-span-2 space-y-3">
         <label className="flex items-start gap-3 cursor-pointer">
           <input
@@ -168,9 +168,6 @@ export default function QuoteForm({
             {t("smsConsentLabel")}
           </span>
         </label>
-        {errors.smsConsent && (
-          <p className="text-sm text-red-600">{errors.smsConsent.message}</p>
-        )}
         <p className="text-xs text-slate-500 leading-relaxed">
           {t("smsDisclosure")}{" "}
           <Link

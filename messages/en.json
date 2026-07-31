@@ -98,7 +98,7 @@
       "flood": "Flood",
       "boat": "Boat"
     },
-    "smsConsentLabel": "By checking this box, you agree to receive recurring marketing and informational text messages from Blanc's Insurance at the phone number provided. Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
+    "smsConsentLabel": "Yes, send me recurring marketing and informational text messages from Blanc's Insurance at the phone number provided (optional — not required to receive a quote or service). Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help.",
     "smsDisclosure": "Mobile information and messaging consent will not be shared with third parties or affiliates for marketing or promotional purposes. See our",
     "privacyLink": "Privacy Policy",
     "termsLink": "Terms of Service",

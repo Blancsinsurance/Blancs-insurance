@@ -98,7 +98,7 @@
       "flood": "Inundación",
       "boat": "Embarcación"
     },
-    "smsConsentLabel": "Al marcar esta casilla, aceptas recibir mensajes de texto recurrentes de marketing e informativos de Blanc's Insurance al número de teléfono proporcionado. Pueden aplicar tarifas de mensajes y datos. La frecuencia de mensajes varía. Responde STOP para darte de baja, HELP para ayuda.",
+    "smsConsentLabel": "Sí, deseo recibir mensajes de texto recurrentes de marketing e informativos de Blanc's Insurance al número de teléfono proporcionado (opcional — no es necesario para recibir una cotización o servicio). Pueden aplicar tarifas de mensajes y datos. La frecuencia de mensajes varía. Responde STOP para darte de baja, HELP para ayuda.",
     "smsDisclosure": "La información móvil y el consentimiento de mensajería no se compartirán con terceros ni afiliados con fines de marketing o promocionales. Consulta nuestra",
     "privacyLink": "Política de Privacidad",
     "termsLink": "Términos de Servicio",
