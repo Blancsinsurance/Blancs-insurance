@@ -98,7 +98,8 @@
       "flood": "Inondasyon",
       "boat": "Bato"
     },
-    "smsConsentLabel": "Wi, mwen vle resevwa mesaj tèks enfòmasyon repete nan men Blanc's Insurance nan nimewo telefòn ou bay la (opsyonèl — pa obligatwa pou resevwa yon devi oswa sèvis). Tarif mesaj ak done ka aplike. Frekans mesaj yo varye. Reponn STOP pou soti, HELP pou èd.",
+    "smsConsentInformationalLabel": "Wi, voye mesaj tèks enfòmasyon pou mwen sou devi, polis, ak kont mwen nan men Blanc's Insurance nan nimewo telefòn ou bay la (opsyonèl — pa obligatwa pou resevwa yon devi oswa sèvis). Tarif mesaj ak done ka aplike. Frekans mesaj yo varye. Reponn STOP pou soti, HELP pou èd.",
+    "smsConsentMarketingLabel": "Wi, mwen ta renmen resevwa tou mesaj tèks maketing ak pwomosyon detanzantan nan men Blanc's Insurance (opsyonèl, separe de mesaj ki anwo yo). Tarif mesaj ak done ka aplike. Frekans mesaj yo varye. Reponn STOP pou soti, HELP pou èd.",
     "smsDisclosure": "Enfòmasyon mobil ak konsantman mesaj pa pral pataje ak twazyèm pati oswa afilye pou rezon maketing oswa pwomosyon. Gade",
     "privacyLink": "Règleman sou Vi Prive",
     "termsLink": "Tèm Sèvis",
@@ -109,6 +110,7 @@
     "subtitle": "Chwazi yon sèvis epi n ap konekte w ak ajan ki dwat la imedyatman.",
     "options": {
       "policyNumber": "Jwenn Nimewo Polis",
+      "getIdCard": "Jwenn Kat Idantifikasyon",
       "makePayment": "Fè yon Peman",
       "addVehicle": "Ajoute Veyikil",
       "addDriver": "Ajoute Chofè",
