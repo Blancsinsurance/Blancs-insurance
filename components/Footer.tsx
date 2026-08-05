@@ -40,6 +40,12 @@ export default function Footer() {
             >
               {t("terms")}
             </Link>
+            <Link
+              href={`/${locale}/sms-opt-in`}
+              className="text-white/70 hover:text-white underline-offset-2 hover:underline"
+            >
+              SMS Opt-In
+            </Link>
           </div>
           <p className="mt-4">
             © {new Date().getFullYear()} Blanc's Insurance. {t("rights")}

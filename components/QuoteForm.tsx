@@ -162,17 +162,21 @@ export default function QuoteForm({
         <textarea {...register("description")} rows={4} className="input" />
       </Field>
 
-      {/* SMS opt-in — informational only, must remain OPTIONAL. Consent to
-          receive texts can never be a condition of getting a quote/service
-          (A2P 10DLC / TCPA rule). Do not add a .refine(v => v === true)
-          back onto this field, and do not add a marketing checkbox back
-          here without registering it as its own separate Twilio campaign. */}
-      <div className="sm:col-span-2 space-y-3">
+      {/* SMS opt-in — informational only, must remain OPTIONAL and unchecked
+          by default. Consent to receive texts can never be a condition of
+          getting a quote/service (A2P 10DLC / TCPA). Do not add
+          .refine(v => v === true) or a required attribute. Marketing
+          consent must never be bundled here (separate campaign). */}
+      <div className="sm:col-span-2 space-y-3 rounded-lg border border-ice-100 bg-ice-50/50 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ocean-900/70">
+          Text message consent (optional)
+        </p>
         <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
             {...register("smsConsentInformational")}
-            className="mt-1 h-4 w-4 rounded border-slate-300 text-blancs-blue focus:ring-blancs-blue"
+            defaultChecked={false}
+            className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 text-blancs-blue focus:ring-blancs-blue"
           />
           <span className="text-sm text-slate-700 leading-relaxed">
             {t("smsConsentInformationalLabel")}
@@ -194,6 +198,14 @@ export default function QuoteForm({
             target="_blank"
           >
             {t("termsLink")}
+          </Link>
+          .{" "}
+          <Link
+            href={`/${locale}/sms-opt-in`}
+            className="text-blancs-blue underline"
+            target="_blank"
+          >
+            How we collect SMS consent
           </Link>
           .
         </p>
