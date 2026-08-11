@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { AuthProvider } from "@/components/AuthProvider";
 import { UnreadProvider } from "@/components/UnreadContext";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -42,6 +43,7 @@ export default async function LocaleLayout({
           </AuthProvider>
         </NextIntlClientProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
