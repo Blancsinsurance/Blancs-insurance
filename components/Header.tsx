@@ -1,23 +1,19 @@
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import HeaderAuthLink from "./HeaderAuthLink";
-
 export default function Header({ locale }: { locale: string }) {
   const t = useTranslations("nav");
   const [menuOpen, setMenuOpen] = useState(false);
-
   const navLinks = [
     { href: `/${locale}/services`, label: t("services") },
     { href: `/${locale}/request-service`, label: t("requestService") },
     { href: `/${locale}/agents`, label: t("agents") },
     { href: `/${locale}/contact`, label: t("contact") },
   ];
-
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-ice-100">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 h-20 flex items-center justify-between gap-3">
@@ -26,9 +22,8 @@ export default function Header({ locale }: { locale: string }) {
           onClick={() => setMenuOpen(false)}
           className="font-display text-lg sm:text-xl font-semibold text-ocean-900 whitespace-nowrap"
         >
-          Blanc's <span className="text-blancs-blue">Insurance</span>
+          Blanc&apos;s <span className="text-blancs-blue">Insurance</span>
         </Link>
-
         {/* Desktop nav — only shows once there's room for everything at once */}
         <nav className="hidden lg:flex items-center gap-8 text-[15px] font-medium text-ocean-900">
           {navLinks.map((link) => (
@@ -37,7 +32,6 @@ export default function Header({ locale }: { locale: string }) {
             </Link>
           ))}
         </nav>
-
         <div className="hidden lg:flex items-center gap-4">
           <LanguageSwitcher locale={locale} />
           <HeaderAuthLink locale={locale} />
@@ -48,7 +42,6 @@ export default function Header({ locale }: { locale: string }) {
             {t("cta")}
           </Link>
         </div>
-
         {/* Mobile / tablet: just logo, CTA, and a menu toggle — never overflows */}
         <div className="flex items-center gap-2 lg:hidden">
           <Link
@@ -67,7 +60,6 @@ export default function Header({ locale }: { locale: string }) {
           </button>
         </div>
       </div>
-
       {/* Mobile / tablet dropdown panel */}
       {menuOpen && (
         <div className="lg:hidden border-t border-ice-100 bg-white px-4 sm:px-6 py-5 flex flex-col gap-5">
