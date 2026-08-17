@@ -13,7 +13,15 @@ import { findAgent } from "@/lib/agents";
 const schema = z.object({
   firstName: z.string().min(1, "Required"),
   lastName: z.string().min(1, "Required"),
-  policyType: z.enum(["commercial", "home", "auto", "flood", "boat"]),
+  policyType: z.enum([
+    "commercial",
+    "home",
+    "auto",
+    "motorcycle",
+    "rv",
+    "flood",
+    "boat",
+  ]),
   phone: z.string().min(7, "Enter a valid phone number"),
   email: z.string().email("Enter a valid email"),
   description: z.string().optional(),
@@ -145,6 +153,8 @@ export default function QuoteForm({
           <option value="commercial">{t("policyOptions.commercial")}</option>
           <option value="home">{t("policyOptions.home")}</option>
           <option value="auto">{t("policyOptions.auto")}</option>
+          <option value="motorcycle">{t("policyOptions.motorcycle")}</option>
+          <option value="rv">{t("policyOptions.rv")}</option>
           <option value="flood">{t("policyOptions.flood")}</option>
           <option value="boat">{t("policyOptions.boat")}</option>
         </select>

@@ -1,6 +1,14 @@
 import { useTranslations } from "next-intl";
 
-const KEYS = ["business", "home", "auto", "flood", "boat"] as const;
+const KEYS = [
+  "business",
+  "home",
+  "auto",
+  "motorcycle",
+  "rv",
+  "flood",
+  "boat",
+] as const;
 
 export default function ServicesGrid() {
   const t = useTranslations("services");
