@@ -56,6 +56,15 @@
     "line2": "Angle, Panyòl & Kreyòl",
     "line3": "Repons menm jou a"
   },
+  "appDownload": {
+    "eyebrow": "Jwenn Aplikasyon an",
+    "title": "Jere kontra ou nenpòt kote, nenpòt lè",
+    "subtitle": "Telechaje aplikasyon Blanc's Insurance pou voye mesaj bay ajan ou, mande sèvis, epi jere kouvèti ou dirèkteman nan telefòn ou.",
+    "downloadOn": "Telechaje sou",
+    "getItOn": "JWENN LI SOU",
+    "appStoreAria": "Telechaje sou App Store",
+    "googlePlayAria": "Jwenn li sou Google Play"
+  },
   "services": {
     "title": "Kouvèti ki fèt pou biznis ou",
     "subtitle": "Kèlkeswa sa w ap pwoteje, yon ajan ka eksplike w li nan mo senp.",
