@@ -56,6 +56,15 @@
     "line2": "Inglés, Español y Kreyòl",
     "line3": "Respuesta el mismo día"
   },
+  "appDownload": {
+    "eyebrow": "Obtén la App",
+    "title": "Administra tu póliza en cualquier momento y lugar",
+    "subtitle": "Descarga la app de Blanc's Insurance para enviar mensajes a tu agente, solicitar servicio y administrar tu cobertura desde tu teléfono.",
+    "downloadOn": "Disponible en",
+    "getItOn": "DISPONIBLE EN",
+    "appStoreAria": "Descárgala en App Store",
+    "googlePlayAria": "Disponible en Google Play"
+  },
   "services": {
     "title": "Cobertura hecha para tu negocio",
     "subtitle": "Sea lo que sea que estés protegiendo, un agente te lo explicará en palabras sencillas.",
