@@ -56,6 +56,15 @@
     "line2": "English, Español & Kreyòl",
     "line3": "Same-day response"
   },
+  "appDownload": {
+    "eyebrow": "Get the App",
+    "title": "Manage your policy anytime, anywhere",
+    "subtitle": "Download the Blanc's Insurance app to message your agent, request service, and manage your coverage right from your phone.",
+    "downloadOn": "Download on the",
+    "getItOn": "GET IT ON",
+    "appStoreAria": "Download on the App Store",
+    "googlePlayAria": "Get it on Google Play"
+  },
   "services": {
     "title": "Coverage built around your business",
     "subtitle": "Whatever you're protecting, an agent can walk you through it in plain language.",
