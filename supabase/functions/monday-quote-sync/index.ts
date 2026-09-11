@@ -48,8 +48,8 @@ Deno.serve(async (req) => {
     };
 
     if (policyLabel) {
-      columnValues[COL.policyType] = { label: policyLabel };
-    }
+  columnValues[COL.policyType] = { labels: [policyLabel] };
+  }
 
     const mutation = `
       mutation ($boardId: ID!, $itemName: String!, $columnValues: JSON!) {
