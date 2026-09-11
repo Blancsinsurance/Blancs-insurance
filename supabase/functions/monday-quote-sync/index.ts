@@ -34,7 +34,8 @@ Deno.serve(async (req) => {
 
     const first = (record.first_name ?? "").trim();
     const last = (record.last_name ?? "").trim();
-    const itemName = [first, last].filter(Boolean).join(" ") || "Website Quote Request";
+    const itemName =
+      [first, last].filter(Boolean).join(" ") || "Website Quote Request";
 
     // Policy type labels must match the dropdown options exactly
     // (commercial, home, auto, motorcycle, rv, flood, boat)
@@ -47,9 +48,12 @@ Deno.serve(async (req) => {
       [COL.source]: { label: "Website" },
     };
 
+    // FIX: Monday expects dropdown values as an array of labels
     if (policyLabel) {
-  columnValues[COL.policyType] = { labels: [policyLabel] };
-  }
+      columnValues[COL.policyType] = {
+        labels: [policyLabel],
+      };
+    }
 
     const mutation = `
       mutation ($boardId: ID!, $itemName: String!, $columnValues: JSON!) {
@@ -83,13 +87,29 @@ Deno.serve(async (req) => {
     const body = await res.json();
 
     if (body.errors?.length) {
-      console.error("Monday API errors:", JSON.stringify(body.errors));
-      return json({ error: "monday_failed", detail: body.errors }, 502);
+      console.error(
+        "Monday API errors:",
+        JSON.stringify(body.errors)
+      );
+      return json(
+        { error: "monday_failed", detail: body.errors },
+        502
+      );
     }
 
     const itemId = body.data?.create_item?.id;
-    console.log("Created Monday item", itemId, "for", itemName);
-    return json({ ok: true, monday_item_id: itemId });
+
+    console.log(
+      "Created Monday item",
+      itemId,
+      "for",
+      itemName
+    );
+
+    return json({
+      ok: true,
+      monday_item_id: itemId,
+    });
   } catch (e) {
     console.error("monday-quote-sync error", e);
     return json({ error: String(e) }, 500);
