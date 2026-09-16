@@ -44,8 +44,9 @@ const BOARDS = [
 const FALLBACK_BOARD = BOARDS[3];
 const FALLBACK_SOURCE_COL = "color_mm73b843";
 
-// ── Monday user IDs by agent email ──────────────────────────
+// ── Monday user IDs by agent email (lowercase keys) ─────────
 const MONDAY_USER_ID_BY_EMAIL: Record<string, string> = {
+  "agency@blancsins.com": "64769369", // Jimmy (actual email in agents table)
   "jimmy@blancsins.com": "64769369",
   "odessa@blancsins.com": "64813286",
   "sylviac@blancsins.com": "99849937",
@@ -101,23 +102,23 @@ Deno.serve(async (req) => {
       return json({ error: "conversation not found" }, 404);
     }
 
+    // Agent name + Monday user id for @mention
     let agentName = "Agent";
-    let agentEmail = "";
     let mondayUserId: string | null = null;
 
     if (convo.agent_id) {
       const { data: agent } = await supabase
         .from("agents")
-        .select("full_name, name, email")
+        .select("full_name, email")
         .eq("id", convo.agent_id)
         .maybeSingle();
 
       agentName =
         agent?.full_name?.trim() ||
-        agent?.name?.trim() ||
         agent?.email ||
         "Agent";
-      agentEmail = (agent?.email ?? "").trim().toLowerCase();
+
+      const agentEmail = (agent?.email ?? "").trim().toLowerCase();
       if (agentEmail && MONDAY_USER_ID_BY_EMAIL[agentEmail]) {
         mondayUserId = MONDAY_USER_ID_BY_EMAIL[agentEmail];
       }
