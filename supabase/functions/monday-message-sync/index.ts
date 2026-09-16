@@ -31,8 +31,8 @@ const BOARDS = [
     name: "Sales 2026",
     id: "18393636190",
     // TODO: replace these two with real column IDs from Sales 2026
-    emailCol: "REPLACE_SALES_2026_EMAIL_COL",
-    phoneCol: "REPLACE_SALES_2026_PHONE_COL",
+    emailCol: "dup__of_email__1",
+    phoneCol: "dup__of_phone__1",
   },
   {
     name: "Sales 2025",
