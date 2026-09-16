@@ -1,16 +1,6 @@
 // Supabase Edge Function: monday-message-sync
-// Triggered by Database Webhook on public.messages INSERT
-//
-// Searches (in order): Sales 2026 → Sales 2025 → Sales 2024 → Website Quotes
-// Matches by email, then phone. Posts Update on the matched item.
-// Caches monday_item_id on the conversation. If no match → creates item on Website Quotes.
-//
-// Secrets required:
-//   MONDAY_API_TOKEN
-//   SUPABASE_URL
-//   SUPABASE_SERVICE_ROLE_KEY
-// Optional:
-//   MONDAY_LAST_CHAT_COL  (Date column id — only works if that column exists on the matched board)
+// Searches Sales 2026 → 2025 → 2024 → Website Quotes
+// Posts Update with real @mention of the assigned agent
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
@@ -23,14 +13,11 @@ const SERVICE_ROLE =
   Deno.env.get("SERVICE_ROLE_KEY") ??
   "";
 
-// ─────────────────────────────────────────────────────────────
-// Board config — search order is top → bottom
-// ─────────────────────────────────────────────────────────────
+// ── Boards (search order) ───────────────────────────────────
 const BOARDS = [
   {
     name: "Sales 2026",
     id: "18393636190",
-    // TODO: replace these two with real column IDs from Sales 2026
     emailCol: "dup__of_email__1",
     phoneCol: "dup__of_phone__1",
   },
@@ -54,9 +41,24 @@ const BOARDS = [
   },
 ];
 
-// When no match is found, create a new item here
-const FALLBACK_BOARD = BOARDS[3]; // Website Quotes
-const FALLBACK_SOURCE_COL = "color_mm73b843"; // Source column on Website Quotes
+const FALLBACK_BOARD = BOARDS[3];
+const FALLBACK_SOURCE_COL = "color_mm73b843";
+
+// ── Monday user IDs by agent email ──────────────────────────
+const MONDAY_USER_ID_BY_EMAIL: Record<string, string> = {
+  "jimmy@blancsins.com": "64769369",
+  "odessa@blancsins.com": "64813286",
+  "sylviac@blancsins.com": "99849937",
+  "sergioalvarez@blancsins.com": "66296227",
+  "delwin@blancsins.com": "68375265",
+  "noahclare@blancsins.com": "95620663",
+  "frankyfrancois@blancsins.com": "96230870",
+  "emileeiwinski2@gmail.com": "65838267",
+  "roseayalamx@gmail.com": "98571990",
+  "blancsinsurance@gmail.com": "53177596",
+  "bls.insurance0@gmail.com": "53173440",
+  "z.growthx@gmail.com": "53177554",
+};
 
 type WebhookPayload = {
   type: "INSERT" | "UPDATE" | "DELETE";
@@ -77,22 +79,18 @@ Deno.serve(async (req) => {
     if (req.method !== "POST") {
       return new Response("Method not allowed", { status: 405 });
     }
-
     if (!TOKEN || !SUPABASE_URL || !SERVICE_ROLE) {
-      console.error("Missing MONDAY_API_TOKEN / SUPABASE_URL / SERVICE_ROLE");
       return json({ error: "server misconfigured" }, 500);
     }
 
     const payload = (await req.json()) as WebhookPayload;
     const row = payload.record;
-
     if (payload.type !== "INSERT") {
       return json({ skipped: true, reason: "not an insert" });
     }
 
     const supabase = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-    // 1. Conversation
     const { data: convo, error: convoErr } = await supabase
       .from("conversations")
       .select("id, agent_id, user_id, monday_item_id")
@@ -100,11 +98,31 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (convoErr || !convo) {
-      console.error("conversation lookup failed", convoErr);
       return json({ error: "conversation not found" }, 404);
     }
 
-    // 2. Customer contact
+    let agentName = "Agent";
+    let agentEmail = "";
+    let mondayUserId: string | null = null;
+
+    if (convo.agent_id) {
+      const { data: agent } = await supabase
+        .from("agents")
+        .select("full_name, name, email")
+        .eq("id", convo.agent_id)
+        .maybeSingle();
+
+      agentName =
+        agent?.full_name?.trim() ||
+        agent?.name?.trim() ||
+        agent?.email ||
+        "Agent";
+      agentEmail = (agent?.email ?? "").trim().toLowerCase();
+      if (agentEmail && MONDAY_USER_ID_BY_EMAIL[agentEmail]) {
+        mondayUserId = MONDAY_USER_ID_BY_EMAIL[agentEmail];
+      }
+    }
+
     const { data: user } = await supabase
       .from("users")
       .select("phone, email")
@@ -115,7 +133,6 @@ Deno.serve(async (req) => {
     const phone = (user?.phone ?? "").trim();
     const phoneDigits = phone.replace(/\D/g, "").slice(-10);
 
-    // 3. Resolve Monday item (cache → search all boards → create)
     let itemId = convo.monday_item_id ?? null;
     let foundBoardId: string | null = null;
 
@@ -128,7 +145,6 @@ Deno.serve(async (req) => {
         itemId = await createFallbackItem(email, phone);
         foundBoardId = FALLBACK_BOARD.id;
       }
-
       if (itemId) {
         await supabase
           .from("conversations")
@@ -138,20 +154,24 @@ Deno.serve(async (req) => {
     }
 
     if (!itemId) {
-      console.error("Could not find or create Monday item");
       return json({ error: "no_monday_item" }, 502);
     }
 
-    // 4. Format update body
-    const who = row.sender_type === "user" ? "Customer" : "Agent";
+    const who =
+      row.sender_type === "user"
+        ? `Customer → ${agentName}`
+        : agentName;
+
     const when = new Date(row.created_at).toLocaleString("en-US", {
       timeZone: "America/New_York",
       dateStyle: "short",
       timeStyle: "short",
     });
+
     const text =
       row.body?.trim() ||
       (row.attachment_url ? "[Attachment]" : "(empty message)");
+
     const appLink = `https://www.blancsins.com/en/agent/messages/${row.conversation_id}`;
 
     const updateBody = `
@@ -162,10 +182,8 @@ ${row.attachment_url ? `<br><a href="${row.attachment_url}">Attachment</a>` : ""
 <a href="${appLink}">Open full conversation in app</a>
 `.trim();
 
-    // 5. Post Update
-    await mondayCreateUpdate(itemId, updateBody);
+    await mondayCreateUpdate(itemId, updateBody, mondayUserId);
 
-    // 6. Optional Last chat date
     if (LAST_CHAT_COL && foundBoardId) {
       const today = new Date().toISOString().slice(0, 10);
       try {
@@ -176,45 +194,37 @@ ${row.attachment_url ? `<br><a href="${row.attachment_url}">Attachment</a>` : ""
           JSON.stringify({ date: today })
         );
       } catch (e) {
-        console.warn(
-          "Last chat column update failed (column may not exist on this board)",
-          e
-        );
+        console.warn("Last chat update failed", e);
       }
     }
 
-    console.log("Synced message to Monday item", itemId, "board", foundBoardId);
-    return json({ ok: true, monday_item_id: itemId, board_id: foundBoardId });
+    console.log("Synced", itemId, "mentioned", mondayUserId || "none");
+    return json({
+      ok: true,
+      monday_item_id: itemId,
+      mentioned_user_id: mondayUserId,
+    });
   } catch (e) {
     console.error("monday-message-sync error", e);
     return json({ error: String(e) }, 500);
   }
 });
 
-// ─── Search boards in order ─────────────────────────────────
-
 async function findAcrossBoards(
   email: string,
   phoneDigits: string
 ): Promise<{ itemId: string; boardId: string } | null> {
   for (const board of BOARDS) {
-    // Skip boards with placeholder column IDs
     if (
       board.emailCol.startsWith("REPLACE") ||
       board.phoneCol.startsWith("REPLACE")
     ) {
-      console.log(`Skipping ${board.name} — column IDs not set yet`);
       continue;
     }
-
     if (email) {
       const id = await searchBoard(board.id, board.emailCol, email, "any_of");
-      if (id) {
-        console.log(`Matched by email on ${board.name}`);
-        return { itemId: id, boardId: board.id };
-      }
+      if (id) return { itemId: id, boardId: board.id };
     }
-
     if (phoneDigits.length >= 10) {
       const id = await searchBoard(
         board.id,
@@ -222,10 +232,7 @@ async function findAcrossBoards(
         phoneDigits,
         "contains_text"
       );
-      if (id) {
-        console.log(`Matched by phone on ${board.name}`);
-        return { itemId: id, boardId: board.id };
-      }
+      if (id) return { itemId: id, boardId: board.id };
     }
   }
   return null;
@@ -238,7 +245,6 @@ async function searchBoard(
   operator: "any_of" | "contains_text"
 ): Promise<string | null> {
   const compareValue = operator === "any_of" ? [value] : value;
-
   const data = await mondayGraphql(
     `
     query ($boardId: [ID!], $compare: CompareValue!) {
@@ -252,15 +258,11 @@ async function searchBoard(
               operator: ${operator}
             }]
           }
-        ) {
-          items { id }
-        }
+        ) { items { id } }
       }
-    }
-  `,
+    }`,
     { boardId: [boardId], compare: compareValue }
   );
-
   const id = data?.boards?.[0]?.items_page?.items?.[0]?.id;
   return id ? String(id) : null;
 }
@@ -272,8 +274,6 @@ async function createFallbackItem(
   const columnValues: Record<string, unknown> = {};
   if (email) columnValues[FALLBACK_BOARD.emailCol] = email;
   if (phone) columnValues[FALLBACK_BOARD.phoneCol] = phone;
-
-  // Source = Chat (label must exist on Website Quotes Source column)
   columnValues[FALLBACK_SOURCE_COL] = { label: "Chat" };
 
   const data = await mondayGraphql(
@@ -284,19 +284,15 @@ async function createFallbackItem(
         item_name: $itemName
         column_values: $columnValues
       ) { id }
-    }
-  `,
+    }`,
     {
       boardId: FALLBACK_BOARD.id,
       itemName: email || phone || "Chat lead",
       columnValues: JSON.stringify(columnValues),
     }
   );
-
   return data?.create_item?.id ? String(data.create_item.id) : null;
 }
-
-// ─── Monday helpers ─────────────────────────────────────────
 
 async function mondayGraphql(
   query: string,
@@ -307,7 +303,7 @@ async function mondayGraphql(
     headers: {
       "Content-Type": "application/json",
       Authorization: TOKEN,
-      "API-Version": "2024-10",
+      "API-Version": "2025-07",
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -319,15 +315,36 @@ async function mondayGraphql(
   return body.data;
 }
 
-async function mondayCreateUpdate(itemId: string, body: string) {
-  await mondayGraphql(
-    `
-    mutation ($itemId: ID!, $body: String!) {
-      create_update(item_id: $itemId, body: $body) { id }
-    }
-  `,
-    { itemId, body }
-  );
+async function mondayCreateUpdate(
+  itemId: string,
+  body: string,
+  mentionUserId: string | null
+) {
+  if (mentionUserId) {
+    await mondayGraphql(
+      `
+      mutation ($itemId: ID!, $body: String!, $mentions: [UpdateMention!]) {
+        create_update(
+          item_id: $itemId
+          body: $body
+          mentions_list: $mentions
+        ) { id }
+      }`,
+      {
+        itemId,
+        body,
+        mentions: [{ id: mentionUserId, type: "User" }],
+      }
+    );
+  } else {
+    await mondayGraphql(
+      `
+      mutation ($itemId: ID!, $body: String!) {
+        create_update(item_id: $itemId, body: $body) { id }
+      }`,
+      { itemId, body }
+    );
+  }
 }
 
 async function mondayChangeColumn(
@@ -345,8 +362,7 @@ async function mondayChangeColumn(
         column_id: $columnId
         value: $value
       ) { id }
-    }
-  `,
+    }`,
     { itemId, boardId, columnId, value }
   );
 }
