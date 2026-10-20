@@ -50,6 +50,14 @@ export const AGENTS: Agent[] = [
     email: "Delwin@blancsins.com",
     languages: ["English", "Kreyòl"],
   },
+    {
+    id: "2c4e8f6c-b349-4787-b8a6-aec5e6cf2736",
+    slug: "brittany-sneed",
+    name: "Brittany Sneed",
+    phone: "(239) 391-1103",
+    email: "brittany@blancsins.com",
+    languages: ["English"],
+  },
 ];
 
 export const OFFICE = {
