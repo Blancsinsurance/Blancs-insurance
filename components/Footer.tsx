@@ -1,5 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { OFFICE } from "@/lib/agents";
@@ -11,7 +12,15 @@ export default function Footer() {
     <footer className="bg-ocean-900 text-white">
       <div className="mx-auto max-w-6xl px-6 py-14 grid gap-10 sm:grid-cols-3">
         <div>
-          <p className="font-display text-lg font-semibold">Blanc&apos;s Insurance</p>
+          <div className="inline-block rounded-xl2 bg-white p-3">
+            <Image
+              src="/brand/blancs-logo.png"
+              alt="Blanc's Insurance"
+              width={625}
+              height={475}
+              className="h-auto w-44"
+            />
+          </div>
           <p className="mt-3 text-sm text-white/70">{t("officeLine")}</p>
           <p className="mt-1 font-mono text-sm">{OFFICE.phone}</p>
           <p className="mt-1 font-mono text-sm">{OFFICE.email}</p>

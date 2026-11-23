@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import HeaderAuthLink from "./HeaderAuthLink";
@@ -20,12 +21,22 @@ export default function Header({ locale }: { locale: string }) {
         <Link
           href={`/${locale}`}
           onClick={() => setMenuOpen(false)}
-          className="font-display text-lg sm:text-xl font-semibold text-ocean-900 whitespace-nowrap"
+          className="flex items-center gap-3 font-display text-lg sm:text-xl font-semibold text-ocean-900 whitespace-nowrap"
         >
-          Blanc&apos;s <span className="text-blancs-blue">Insurance</span>
+          <Image
+            src="/brand/blancs-emblem.png"
+            alt=""
+            width={395}
+            height={265}
+            priority
+            className="hidden sm:block lg:hidden xl:block h-10 w-auto"
+          />
+          <span>
+            Blanc&apos;s <span className="text-blancs-blue">Insurance</span>
+          </span>
         </Link>
         {/* Desktop nav — only shows once there's room for everything at once */}
-        <nav className="hidden lg:flex items-center gap-8 text-[15px] font-medium text-ocean-900">
+        <nav className="hidden lg:flex items-center gap-6 text-[15px] font-medium text-ocean-900 whitespace-nowrap">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href} className="hover:text-blancs-blue">
               {link.label}
