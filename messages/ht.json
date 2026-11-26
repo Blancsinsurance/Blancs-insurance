@@ -41,7 +41,8 @@
   },
   "chat": {
     "placeholder": "Ekri yon mesaj",
-    "attachment": "Gade fichye atache"
+    "attachment": "Gade fichye atache",
+    "notSent": "Mesaj la pa t voye."
   },
   "hero": {
     "eyebrow": "Otorize. Lokal. Imen.",
@@ -218,5 +219,27 @@
     "active": "Aktif",
     "closed": "Fèmen",
     "chatTitle": "Konvèsasyon"
+  },
+  "inbox": {
+    "agent": "Ajan",
+    "attachment": "Fichye",
+    "noMessagesYet": "Poko gen mesaj",
+    "you": "Ou",
+    "newMessage": "Nouvo mesaj",
+    "unreadCount": "{count} pa li",
+    "dismiss": "Fèmen",
+    "editContact": "Detay kontak la",
+    "addName": "Ajoute non",
+    "edit": "Modifye detay",
+    "nameLabel": "Non",
+    "namePlaceholder": "egz. Marie Joseph",
+    "notesLabel": "Nòt (se ou sèl ki ka wè yo)",
+    "notesPlaceholder": "Nimewo polis, machin, pi bon lè pou rele…",
+    "save": "Anrejistre",
+    "cancel": "Anile"
+  },
+  "time": {
+    "today": "Jodi a",
+    "yesterday": "Yè"
   }
 }

@@ -7,6 +7,8 @@ import { Paperclip, Send } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { findAgent } from "@/lib/agents";
+import { useUnread } from "@/components/UnreadContext";
+import ChatMessages from "@/components/ChatMessages";
 
 type Message = {
   id: string;
@@ -25,6 +27,8 @@ export default function ChatPage({
   const t = useTranslations("chat");
   const router = useRouter();
   const { session, loading: authLoading } = useAuth();
+  const { markConversationRead } = useUnread();
+  const [sendError, setSendError] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [agentId, setAgentId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
@@ -55,7 +59,8 @@ export default function ChatPage({
       .eq("conversation_id", conversationId)
       .order("created_at", { ascending: true });
     setMessages(data ?? []);
-  }, [conversationId]);
+    markConversationRead(conversationId);
+  }, [conversationId, markConversationRead]);
 
   useEffect(() => {
     if (!session) return;
@@ -72,7 +77,10 @@ export default function ChatPage({
           filter: `conversation_id=eq.${conversationId}`,
         },
         (payload) => {
-          setMessages((prev) => [...prev, payload.new as Message]);
+          const m = payload.new as Message;
+          setMessages((prev) =>
+            prev.some((p) => p.id === m.id) ? prev : [...prev, m]
+          );
         }
       )
       .subscribe();
@@ -90,12 +98,18 @@ export default function ChatPage({
     if (!draft.trim() || !session) return;
     const body = draft.trim();
     setDraft("");
-    await supabase.from("messages").insert({
+    setSendError(null);
+    const { error } = await supabase.from("messages").insert({
       conversation_id: conversationId,
       sender_type: "user",
       sender_id: session.user.id,
       body,
     });
+    if (error) {
+      console.error("send", error);
+      setSendError(error.message);
+      setDraft(body);
+    }
   }
 
   async function attachFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -134,30 +148,15 @@ export default function ChatPage({
       </h1>
 
       <div className="flex-1 overflow-y-auto py-6 flex flex-col gap-3">
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            className={`max-w-[75%] rounded-xl2 px-4 py-3 text-sm ${
-              m.sender_type === "user"
-                ? "self-end bg-blancs-blue text-white"
-                : "self-start bg-ice-100 text-ocean-900"
-            }`}
-          >
-            {m.body && <p>{m.body}</p>}
-            {m.attachment_url && (
-              <a
-                href={m.attachment_url}
-                target="_blank"
-                rel="noreferrer"
-                className="underline text-sm"
-              >
-                📎 {t("attachment")}
-              </a>
-            )}
-          </div>
-        ))}
+        <ChatMessages messages={messages} mySide="user" />
         <div ref={bottomRef} />
       </div>
+
+      {sendError && (
+        <p className="mb-2 text-sm text-red-700">
+          {t("notSent")} ({sendError})
+        </p>
+      )}
 
       <div className="flex items-end gap-3 border-t border-ice-100 pt-4">
         <input

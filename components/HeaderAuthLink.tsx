@@ -22,7 +22,7 @@ function IconWithBadge({
       {icon}
       {count > 0 && (
         <span
-          className="absolute -right-2.5 -top-2.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white"
+          className="absolute -right-2.5 -top-2.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-blancs-blue px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white"
           aria-label={`${count} unread`}
         >
           {count > 99 ? "99+" : count}

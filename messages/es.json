@@ -41,7 +41,8 @@
   },
   "chat": {
     "placeholder": "Escribe un mensaje",
-    "attachment": "Ver archivo adjunto"
+    "attachment": "Ver archivo adjunto",
+    "notSent": "Mensaje no enviado."
   },
   "hero": {
     "eyebrow": "Con licencia. Local. Humano.",
@@ -218,5 +219,27 @@
     "active": "Activa",
     "closed": "Cerrada",
     "chatTitle": "Conversación"
+  },
+  "inbox": {
+    "agent": "Agente",
+    "attachment": "Archivo adjunto",
+    "noMessagesYet": "Aún no hay mensajes",
+    "you": "Tú",
+    "newMessage": "Nuevo mensaje",
+    "unreadCount": "{count} sin leer",
+    "dismiss": "Cerrar",
+    "editContact": "Datos del contacto",
+    "addName": "Agregar nombre",
+    "edit": "Editar datos",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "p. ej. María López",
+    "notesLabel": "Notas (solo tú las ves)",
+    "notesPlaceholder": "Número de póliza, vehículo, mejor hora para llamar…",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "time": {
+    "today": "Hoy",
+    "yesterday": "Ayer"
   }
 }

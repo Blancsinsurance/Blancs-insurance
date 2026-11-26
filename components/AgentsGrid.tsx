@@ -57,11 +57,11 @@ export default function AgentsGrid({ locale }: { locale: string }) {
         <p className="mt-4 text-lg text-slate-600">{t("subtitle")}</p>
       </div>
 
-      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-14 flex flex-wrap justify-center gap-6">
         {AGENTS.map((agent) => (
           <div
             key={agent.id}
-            className="rounded-xl2 border border-ice-100 p-8 flex flex-col items-center text-center shadow-soft"
+            className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)] rounded-xl2 border border-ice-100 p-8 flex flex-col items-center text-center shadow-soft"
           >
             <div className="h-20 w-20 rounded-full bg-blancs-blue text-white flex items-center justify-center font-display text-2xl font-semibold">
               {agent.name

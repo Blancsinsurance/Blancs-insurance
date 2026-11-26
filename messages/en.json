@@ -41,7 +41,8 @@
   },
   "chat": {
     "placeholder": "Type a message",
-    "attachment": "View attachment"
+    "attachment": "View attachment",
+    "notSent": "Message not sent."
   },
   "hero": {
     "eyebrow": "Licensed. Local. Human.",
@@ -218,5 +219,27 @@
     "active": "Active",
     "closed": "Closed",
     "chatTitle": "Conversation"
+  },
+  "inbox": {
+    "agent": "Agent",
+    "attachment": "Attachment",
+    "noMessagesYet": "No messages yet",
+    "you": "You",
+    "newMessage": "New message",
+    "unreadCount": "{count} unread",
+    "dismiss": "Dismiss",
+    "editContact": "Contact details",
+    "addName": "Add name",
+    "edit": "Edit details",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g. Maria Lopez",
+    "notesLabel": "Notes (only you can see these)",
+    "notesPlaceholder": "Policy number, vehicle, best time to call…",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "time": {
+    "today": "Today",
+    "yesterday": "Yesterday"
   }
 }

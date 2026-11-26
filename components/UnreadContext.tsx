@@ -9,29 +9,47 @@ import {
   useRef,
   useState,
 } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { X } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { supabase } from "@/lib/supabase";
+import { applyTabTitle } from "@/lib/unread";
 import {
-  applyTabTitle,
-  getLastReadMap,
-  isMessageUnread,
-  setConversationLastRead,
-  type LastReadMap,
-} from "@/lib/unread";
+  fetchInbox,
+  markConversationRead as markReadRpc,
+  otherPartyName,
+  resolveMyAgentId,
+  type InboxRow,
+} from "@/lib/inbox";
 
+/**
+ * Unread state now lives in Supabase (conversation_reads + the
+ * inbox_conversations() RPC), so the website and the mobile app share the
+ * same unread dots, the same order and the same conversations.
+ */
 type UnreadContextValue = {
   unreadCount: number;
   unreadByConversation: Record<string, number>;
+  inbox: InboxRow[];
+  inboxLoading: boolean;
+  inboxError: string | null;
+  /** Live agents-table id for the signed-in agent (null for customers). */
+  myAgentId: string | null;
   markConversationRead: (conversationId: string) => void;
-  refresh: () => Promise<void>;
+  refresh: () => Promise<InboxRow[]>;
 };
 
 const UnreadContext = createContext<UnreadContextValue>({
   unreadCount: 0,
   unreadByConversation: {},
+  inbox: [],
+  inboxLoading: true,
+  inboxError: null,
+  myAgentId: null,
   markConversationRead: () => {},
-  refresh: async () => {},
+  refresh: async () => [],
 });
 
 type MessageRow = {
@@ -40,146 +58,102 @@ type MessageRow = {
   sender_type: "user" | "agent";
   created_at: string;
   body: string | null;
+  attachment_url: string | null;
 };
+
+type Toast = { conversationId: string; title: string; body: string; href: string };
 
 function conversationIdFromPath(pathname: string | null): string | null {
   if (!pathname) return null;
   // /en/messages/<uuid> or /en/agent/messages/<uuid>
-  const m = pathname.match(
-    /\/(?:messages|agent\/messages)\/([0-9a-f-]{36})/i
-  );
+  const m = pathname.match(/\/(?:messages|agent\/messages)\/([0-9a-f-]{36})/i);
   return m?.[1] ?? null;
 }
 
 export function UnreadProvider({ children }: { children: React.ReactNode }) {
-  const { session, isAgent, agent, loading: authLoading } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const pathname = usePathname();
-  const [unreadByConversation, setUnreadByConversation] = useState<
-    Record<string, number>
-  >({});
-  const lastReadRef = useRef<LastReadMap>({});
+  const locale = useLocale();
+  const t = useTranslations("inbox");
+  const [inbox, setInbox] = useState<InboxRow[]>([]);
+  const [inboxLoading, setInboxLoading] = useState(true);
+  const [inboxError, setInboxError] = useState<string | null>(null);
+  const [myAgentId, setMyAgentId] = useState<string | null>(null);
+  const [toast, setToast] = useState<Toast | null>(null);
   const activeConvoRef = useRef<string | null>(null);
   const notifiedIdsRef = useRef<Set<string>>(new Set());
 
   const userId = session?.user?.id ?? null;
+  const email = session?.user?.email ?? null;
 
-  // Keep active conversation in sync with route
   useEffect(() => {
-    activeConvoRef.current = conversationIdFromPath(pathname);
-    if (userId && activeConvoRef.current) {
-      setConversationLastRead(userId, activeConvoRef.current);
-      setUnreadByConversation((prev) => {
-        if (!activeConvoRef.current || !prev[activeConvoRef.current]) return prev;
-        const next = { ...prev };
-        delete next[activeConvoRef.current];
-        return next;
-      });
+    let cancelled = false;
+    setMyAgentId(null);
+    if (!email) return;
+    resolveMyAgentId(email).then((id) => {
+      if (!cancelled) setMyAgentId(id);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [email]);
+
+  const refresh = useCallback(async () => {
+    if (!userId) {
+      setInbox([]);
+      setInboxLoading(false);
+      return [];
+    }
+    const { rows, error } = await fetchInbox();
+    const active = activeConvoRef.current;
+    const adjusted = active
+      ? rows.map((r) => (r.id === active ? { ...r, unread_count: 0 } : r))
+      : rows;
+    setInbox(adjusted);
+    setInboxError(error);
+    setInboxLoading(false);
+    return adjusted;
+  }, [userId]);
+
+  // Keep active conversation in sync with route; opening one marks it read.
+  useEffect(() => {
+    const prev = activeConvoRef.current;
+    const next = conversationIdFromPath(pathname);
+    activeConvoRef.current = next;
+    if (!userId) return;
+    if (prev && prev !== next) markReadRpc(prev);
+    if (next) {
+      setInbox((rows) =>
+        rows.map((r) => (r.id === next ? { ...r, unread_count: 0 } : r))
+      );
+      setToast((tst) => (tst?.conversationId === next ? null : tst));
+      markReadRpc(next);
     }
   }, [pathname, userId]);
 
-  const recomputeFromMessages = useCallback(
-    (messages: MessageRow[], lastRead: LastReadMap) => {
-      const counts: Record<string, number> = {};
-      for (const m of messages) {
-        // Only count messages from the *other* party
-        const fromOther = isAgent
-          ? m.sender_type === "user"
-          : m.sender_type === "agent";
-        if (!fromOther) continue;
-        if (activeConvoRef.current === m.conversation_id) continue;
-        if (!isMessageUnread(m.created_at, m.conversation_id, lastRead)) continue;
-        counts[m.conversation_id] = (counts[m.conversation_id] ?? 0) + 1;
-      }
-      setUnreadByConversation(counts);
-    },
-    [isAgent]
-  );
-
-  const refresh = useCallback(async () => {
-    if (!userId || authLoading) return;
-
-    let lastRead = getLastReadMap(userId);
-
-    // Conversations this user can see
-    let convoQuery = supabase.from("conversations").select("id");
-    if (isAgent && agent?.id) {
-      // Prefer DB agent id resolution is already handled on agent page;
-      // filter by static agent id as best effort (RLS still applies).
-      convoQuery = convoQuery.eq("agent_id", agent.id);
-    } else {
-      convoQuery = convoQuery.eq("user_id", userId);
-    }
-
-    const { data: convos } = await convoQuery;
-    const convoIds = (convos ?? []).map((c) => c.id as string);
-    if (convoIds.length === 0) {
-      setUnreadByConversation({});
-      return;
-    }
-
-    // First visit for this browser: seed last-read to now so only *new*
-    // messages after this point count as unread (avoids flooding the badge
-    // with entire history on upgrade).
-    const isFirstVisit = Object.keys(lastRead).length === 0;
-    if (isFirstVisit) {
-      const now = new Date().toISOString();
-      for (const id of convoIds) {
-        lastRead[id] = now;
-      }
-      try {
-        localStorage.setItem(
-          `blancs_last_read_${userId}`,
-          JSON.stringify(lastRead)
-        );
-      } catch {
-        /* ignore */
-      }
-    }
-
-    lastReadRef.current = lastRead;
-
-    // Recent messages from the other party (cap for performance)
-    const otherType = isAgent ? "user" : "agent";
-    const { data: messages } = await supabase
-      .from("messages")
-      .select("id, conversation_id, sender_type, created_at, body")
-      .in("conversation_id", convoIds)
-      .eq("sender_type", otherType)
-      .order("created_at", { ascending: false })
-      .limit(200);
-
-    recomputeFromMessages((messages as MessageRow[]) ?? [], lastReadRef.current);
-  }, [userId, authLoading, isAgent, agent?.id, recomputeFromMessages]);
-
   // Initial load + when auth changes
   useEffect(() => {
-    if (authLoading || !session) {
-      setUnreadByConversation({});
+    if (authLoading) return;
+    if (!session) {
+      setInbox([]);
       applyTabTitle(0);
       return;
     }
+    setInboxLoading(true);
     refresh();
   }, [authLoading, session, refresh]);
 
-  // Cross-tab last-read updates
+  // Refresh when the tab regains focus (covers sleeping laptops etc.)
   useEffect(() => {
     if (!userId) return;
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === `blancs_last_read_${userId}`) refresh();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refresh();
     };
-    const onCustom = () => {
-      lastReadRef.current = getLastReadMap(userId);
-      refresh();
-    };
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("blancs-last-read", onCustom);
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("blancs-last-read", onCustom);
-    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, [userId, refresh]);
 
-  // Realtime: new messages
+  // Realtime: new messages (RLS limits the stream to my conversations)
   useEffect(() => {
     if (!session || !userId) return;
 
@@ -187,46 +161,42 @@ export function UnreadProvider({ children }: { children: React.ReactNode }) {
       .channel(`unread-global:${userId}`)
       .on(
         "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-        },
-        (payload) => {
+        { event: "INSERT", schema: "public", table: "messages" },
+        async (payload) => {
           const m = payload.new as MessageRow;
-          const fromOther = isAgent
-            ? m.sender_type === "user"
-            : m.sender_type === "agent";
+          if (notifiedIdsRef.current.has(m.id)) return;
+          notifiedIdsRef.current.add(m.id);
+
+          const rows = await refresh();
+          const row = rows.find((r) => r.id === m.conversation_id);
+          if (!row) return;
+          const fromOther = m.sender_type !== row.my_role;
           if (!fromOther) return;
 
-          // If user is viewing this conversation, mark read and skip badge
           if (activeConvoRef.current === m.conversation_id) {
-            setConversationLastRead(userId, m.conversation_id);
+            markReadRpc(m.conversation_id);
             return;
           }
 
-          // May not belong to this user — refresh is safest (RLS filters)
-          // Optimistic bump; full refresh corrects if not ours
-          setUnreadByConversation((prev) => ({
-            ...prev,
-            [m.conversation_id]: (prev[m.conversation_id] ?? 0) + 1,
-          }));
+          const title = otherPartyName(row, t("agent"));
+          const preview =
+            m.body?.trim()?.slice(0, 120) ||
+            (m.attachment_url ? t("attachment") : t("newMessage"));
+          const href =
+            row.my_role === "agent"
+              ? `/${locale}/agent/messages/${m.conversation_id}`
+              : `/${locale}/messages/${m.conversation_id}`;
 
-          // Browser notification (if permitted) — once per message id
+          setToast({ conversationId: m.conversation_id, title, body: preview, href });
+
+          // Browser notification when the tab is in the background
           if (
             typeof Notification !== "undefined" &&
             Notification.permission === "granted" &&
-            document.visibilityState === "hidden" &&
-            !notifiedIdsRef.current.has(m.id)
+            document.visibilityState === "hidden"
           ) {
-            notifiedIdsRef.current.add(m.id);
-            const preview =
-              m.body?.trim()?.slice(0, 80) || "New message";
             try {
-              new Notification("Blanc's Insurance", {
-                body: preview,
-                tag: m.conversation_id,
-              });
+              new Notification(title, { body: preview, tag: m.conversation_id });
             } catch {
               /* ignore */
             }
@@ -238,13 +208,24 @@ export function UnreadProvider({ children }: { children: React.ReactNode }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [session, userId, isAgent]);
+  }, [session, userId, refresh, locale, t]);
 
-  // Tab title
+  // Auto-hide toast
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 6000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const unreadByConversation = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const r of inbox) if (r.unread_count > 0) map[r.id] = r.unread_count;
+    return map;
+  }, [inbox]);
+
   const unreadCount = useMemo(
-    () =>
-      Object.values(unreadByConversation).reduce((a, b) => a + b, 0),
-    [unreadByConversation]
+    () => inbox.reduce((a, r) => a + (r.unread_count || 0), 0),
+    [inbox]
   );
 
   useEffect(() => {
@@ -252,32 +233,70 @@ export function UnreadProvider({ children }: { children: React.ReactNode }) {
     return () => applyTabTitle(0);
   }, [unreadCount]);
 
-  const markConversationRead = useCallback(
-    (conversationId: string) => {
-      if (!userId) return;
-      setConversationLastRead(userId, conversationId);
-      setUnreadByConversation((prev) => {
-        if (!prev[conversationId]) return prev;
-        const next = { ...prev };
-        delete next[conversationId];
-        return next;
-      });
-    },
-    [userId]
-  );
+  const markConversationRead = useCallback((conversationId: string) => {
+    setInbox((rows) =>
+      rows.map((r) => (r.id === conversationId ? { ...r, unread_count: 0 } : r))
+    );
+    markReadRpc(conversationId);
+  }, []);
 
   const value = useMemo(
     () => ({
       unreadCount,
       unreadByConversation,
+      inbox,
+      inboxLoading,
+      inboxError,
+      myAgentId,
       markConversationRead,
       refresh,
     }),
-    [unreadCount, unreadByConversation, markConversationRead, refresh]
+    [
+      unreadCount,
+      unreadByConversation,
+      inbox,
+      inboxLoading,
+      inboxError,
+      myAgentId,
+      markConversationRead,
+      refresh,
+    ]
   );
 
   return (
-    <UnreadContext.Provider value={value}>{children}</UnreadContext.Provider>
+    <UnreadContext.Provider value={value}>
+      {children}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-5 right-5 z-50 w-[calc(100%-2.5rem)] max-w-sm"
+        >
+          <div className="flex items-start gap-3 rounded-xl2 border border-ice-100 bg-white p-4 shadow-soft">
+            <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-blancs-blue" />
+            <Link
+              href={toast.href}
+              onClick={() => setToast(null)}
+              className="min-w-0 flex-1"
+            >
+              <p className="truncate text-sm font-semibold text-ocean-900">
+                {toast.title}
+              </p>
+              <p className="mt-0.5 line-clamp-2 text-sm text-slate-600">
+                {toast.body}
+              </p>
+            </Link>
+            <button
+              onClick={() => setToast(null)}
+              aria-label={t("dismiss")}
+              className="rounded-full p-1 text-slate-600 hover:bg-ice-100"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </UnreadContext.Provider>
   );
 }
 
